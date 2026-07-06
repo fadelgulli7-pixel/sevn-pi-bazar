@@ -1,47 +1,254 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ku">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sevn Pi Bazar - Cyber Inferno Premium</title>
-    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <title>Sevn Pi Bazar - Space Rider 3D</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        body { background: #020005; font-family: 'Segoe UI', Tahoma, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: #fff; overflow: hidden; }
+        .game-container { width: 100%; max-width: 420px; height: 100vh; display: flex; flex-direction: column; position: relative; background: #000; }
+        .ui-layer { position: absolute; top: 0; left: 0; width: 100%; padding: 15px; display: flex; justify-content: space-between; align-items: center; z-index: 10; pointer-events: none; }
+        .score-box { background: rgba(0, 0, 0, 0.6); border: 1px solid #ffcc00; padding: 8px 12px; border-radius: 20px; font-weight: bold; color: #ffcc00; font-size: 14px; box-shadow: 0 0 10px #ffcc00; }
+        .live-box { background: rgba(0, 0, 0, 0.6); border: 1px solid #ff3366; padding: 8px 12px; border-radius: 20px; font-weight: bold; color: #ff3366; font-size: 14px; }
+        canvas { width: 100%; height: 100%; display: block; }
+        .controls { position: absolute; bottom: 30px; left: 0; width: 100%; display: flex; justify-content: space-around; padding: 0 20px; z-index: 10; }
+        .btn-ctrl { width: 70px; height: 70px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 50%; color: #fff; font-size: 24px; font-weight: bold; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); cursor: pointer; }
+        .btn-ctrl:active { background: rgba(255, 204, 0, 0.4); border-color: #ffcc00; }
+        .game-over-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; z-index: 20; display: none; }
+        .btn-restart { background: linear-gradient(180deg, #00ff66 0%, #00b33c 100%); color: #000; border: none; padding: 12px 35px; font-size: 18px; font-weight: bold; border-radius: 25px; cursor: pointer; box-shadow: 0 5px 20px #00ff66; }
+    </style>
+</head>
+<body>
 
-        body {
-            background: radial-gradient(circle, #2a0105 0%, #030001 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            color: #fff;
-            overflow: hidden;
-        }
+<div class="game-container">
+    <div class="ui-layer">
+        <div class="score-box">SEVN: <span id="score-val">0</span></div>
+        <div class="live-box">LIVES: <span id="lives-val">3</span></div>
+    </div>
 
-        .game-container {
-            width: 100%;
-            max-width: 420px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    <canvas id="gameCanvas"></canvas>
 
-        .wallet-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 68, 0, 0.04);
-            border: 1px solid #ff4400;
-            border-radius: 12px;
-            padding: 10px 14px;
-            font-size: 11px;
-            box-shadow: 0 0 15px rgba(255,
+    <div class="controls">
+        <div class="btn-ctrl" id="left-btn">◀</div>
+        <div class="btn-ctrl" id="right-btn">▶</div>
+    </div>
+
+    <div class="game-over-screen" id="over-screen">
+        <h1 style="color: #ff3366; font-size: 36px; text-shadow: 0 0 15px #ff3366;">GAME OVER</h1>
+        <p style="font-size: 18px;">تە کۆینێن SEVN کۆمکرن: <span id="final-score" style="color:#ffcc00; font-weight:bold;">0</span></p>
+        <button class="btn-restart" onclick="restartGame()">دووبارە دەستپێبکە</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // ڕێکخستنا قەبارێ شاشێ
+    canvas.width = 420;
+    canvas.height = window.innerHeight;
+
+    let player = { x: canvas.width / 2, y: canvas.height - 140, size: 30, lane: 1 };
+    let lanes = [canvas.width / 6, canvas.width / 2, (canvas.width / 6) * 5];
+    
+    let score = 0;
+    let lives = 3;
+    let gameActive = true;
+    let speed = 6;
+    let items = [];
+    let stars = [];
+
+    // دروستکردنا پاشبنەیا ستێران بۆ قووڵاتییا ٣دی
+    for(let i=0; i<40; i++) {
+        stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2 });
+    }
+
+    // گوهۆڕینا لایان ب دەست ل سەر مۆبایلێ
+    document.getElementById('left-btn').addEventListener('touchstart', () => movePlayer(-1));
+    document.getElementById('right-btn').addEventListener('touchstart', () => movePlayer(1));
+    window.addEventListener('keydown', (e) => {
+        if(e.key === 'ArrowLeft') movePlayer(-1);
+        if(e.key === 'ArrowRight') movePlayer(1);
+    });
+
+    function movePlayer(dir) {
+        if (!gameActive) return;
+        player.lane += dir;
+        if(player.lane < 0) player.lane = 0;
+        if(player.lane > 2) player.lane = 2;
+    }
+
+    function spawnItem() {
+        if (!gameActive) return;
+        let randLane = Math.floor(Math.random() * 3);
+        let types = ['7', 'SOL', 'BTC', '🔥'];
+        let randType = types[Math.floor(Math.random() * types.length)];
+        items.push({
+            x: lanes[randLane],
+            y: -50,
+            type: randType,
+            size: 15,
+            scale: 0.2
+        });
+        setTimeout(spawnItem, Math.random() * 800 + 600);
+    }
+
+    function draw3DBackground() {
+        // پاشبنەیا بۆشایی یا قووڵ
+        let bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        bgGrad.addColorStop(0, '#040012');
+        bgGrad.addColorStop(1, '#000000');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // ستێرێن بزوێنەر
+        ctx.fillStyle = '#fff';
+        stars.forEach(st => {
+            st.y += speed * 0.2;
+            if(st.y > canvas.height) st.y = 0;
+            ctx.fillRect(st.x, st.y, st.size, st.size);
+        });
+
+        // کێشانا لایەنێ هێڵێن ٣دی (Perspective Cyber Grid Line)
+        ctx.strokeStyle = 'rgba(255, 0, 102, 0.3)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2, 100); ctx.lineTo(-100, canvas.height);
+        ctx.moveTo(canvas.width / 2, 100); ctx.lineTo(canvas.width / 3, canvas.height);
+        ctx.moveTo(canvas.width / 2, 100); ctx.lineTo((canvas.width / 3) * 2, canvas.height);
+        ctx.moveTo(canvas.width / 2, 100); ctx.lineTo(canvas.width + 100, canvas.height);
+        ctx.stroke();
+    }
+
+    function drawPlayerShip() {
+        let targetX = lanes[player.lane];
+        player.x += (targetX - player.x) * 0.25; // جووڵانەوا نەرم
+
+        ctx.save();
+        ctx.translate(player.x, player.y);
+
+        // ئاگرێ پشت کەشتییێ (Thruster Engine)
+        let fireGrad = ctx.createRadialGradient(0, 20, 2, 0, 25, 12);
+        fireGrad.addColorStop(0, '#fff');
+        fireGrad.addColorStop(0.4, '#ffaa00');
+        fireGrad.addColorStop(1, 'rgba(255,0,0,0)');
+        ctx.fillStyle = fireGrad;
+        ctx.beginPath(); ctx.arc(0, 20, 12, 0, Math.PI*2); ctx.fill();
+
+        // بدەنێ کەشتییا ٣دی یا پێشکەفتی (Cyber Spacecraft)
+        let shipGrad = ctx.createLinearGradient(-15, 0, 15, 0);
+        shipGrad.addColorStop(0, '#00ffff');
+        shipGrad.addColorStop(0.5, '#ffffff');
+        shipGrad.addColorStop(1, '#00ffff');
+        ctx.fillStyle = shipGrad;
+        ctx.shadowBlur = 15; ctx.shadowColor = '#00ffff';
+
+        ctx.beginPath();
+        ctx.moveTo(0, -25); // لووتکە
+        ctx.lineTo(18, 15);  // لایێ ڕاست
+        ctx.lineTo(0, 5);    // ناوەڕاست
+        ctx.lineTo(-18, 15); // لایێ چەپ
+        ctx.closePath();
+        ctx.fill();
+
+        // باڵێن زێڕین
+        ctx.fillStyle = '#ffcc00';
+        ctx.fillRect(-22, 5, 4, 8);
+        ctx.fillRect(18, 5, 4, 8);
+
+        ctx.restore();
+    }
+
+    function updateAndDrawItems() {
+        for(let i = items.length - 1; i >= 0; i--) {
+            let it = items[i];
+            it.y += speed;
+            
+            // گەورەبوونا سێ دووری دەمێ نێزیک دبن (3D Scaling Effect)
+            if(it.scale < 1) it.scale += 0.02;
+            let currentSize = it.size * it.scale * 1.5;
+
+            // پشکنینا پێکدادانێ (Collision Detection)
+            let distY = Math.abs(it.y - player.y);
+            let distX = Math.abs(it.x - player.x);
+            
+            if(distY < 25 && distX < 25) {
+                if(it.type === '🔥') {
+                    lives--;
+                    document.getElementById('lives-val').innerText = lives;
+                    if(lives <= 0) endGame();
+                } else {
+                    let reward = it.type === '7' ? 10 : 3;
+                    score += reward;
+                    document.getElementById('score-val').innerText = score;
+                }
+                items.splice(i, 1);
+                continue;
+            }
+
+            if(it.y > canvas.height + 50) {
+                items.splice(i, 1);
+                continue;
+            }
+
+            // کێشانا لۆگۆیان ب شێوازێ مۆدێرن و شاهکار
+            ctx.save();
+            ctx.translate(it.x, it.y);
+            
+            if(it.type === '7') {
+                // کۆینێ فەرمی یێ شاهکار یێ تۆڕا تە (SEVEN)
+                let rim = ctx.createRadialGradient(0,0, currentSize*0.7, 0,0, currentSize);
+                rim.addColorStop(0, '#7a5800'); rim.addColorStop(0.5, '#ffcc00'); rimGrad.addColorStop(1, '#3d2c00');
+                ctx.fillStyle = '#ffcc00'; ctx.shadowBlur = 20; ctx.shadowColor = '#ffcc00';
+                ctx.beginPath(); ctx.arc(0, 0, currentSize, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = '#000'; ctx.font = `bold ${currentSize}px Arial`; ctx.textAlign='center'; ctx.textBaseline='middle';
+                ctx.fillText('7', 0, 0);
+            } 
+            else if(it.type === '🔥') {
+                ctx.shadowBlur = 20; ctx.shadowColor = '#ff3366';
+                ctx.font = `${currentSize * 1.5}px Arial`; ctx.textAlign='center'; ctx.textBaseline='middle';
+                ctx.fillText('🔥', 0, 0);
+            } 
+            else {
+                // کریپتۆ لۆگۆ یێن دی
+                ctx.shadowBlur = 15; ctx.shadowColor = it.type === 'SOL' ? '#00ffa3' : '#f7931a';
+                ctx.fillStyle = it.type === 'SOL' ? '#00ffa3' : '#f7931a';
+                ctx.font = `bold ${currentSize}px Arial`; ctx.textAlign='center'; ctx.textBaseline='middle';
+                ctx.fillText(it.type === 'BTC' ? '₿' : 'S', 0, 0);
+            }
+            ctx.restore();
+        }
+    }
+
+    function endGame() {
+        gameActive = false;
+        document.getElementById('final-score').innerText = score;
+        document.getElementById('over-screen').style.display = 'flex';
+    }
+
+    function restartGame() {
+        score = 0; lives = 3; items = []; speed = 6; gameActive = true;
+        document.getElementById('score-val').innerText = score;
+        document.getElementById('lives-val').innerText = lives;
+        document.getElementById('over-screen').style.display = 'none';
+    }
+
+    function gameLoop() {
+        draw3DBackground();
+        drawPlayerShip();
+        updateAndDrawItems();
+        
+        // زێدەبوونا هێدی یا خێراییا یاریێ بۆ حەماسیتر لێهاتنێ
+        if(gameActive) {
+            speed += 0.001;
+            requestAnimationFrame(gameLoop);
+        }
+    }
+
+    // دەستپێکرنا ئۆتۆماتیکی
+    spawnItem();
+    gameLoop();
+</script>
+</body>
+</html>
