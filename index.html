@@ -7,19 +7,33 @@
     <style>
         body { background: #0a0a12; color: #00e5ff; font-family: 'Arial', sans-serif; text-align: center; padding: 20px; }
         .coin-display { font-size: 30px; margin: 20px 0; border: 2px solid #7000ff; padding: 20px; border-radius: 15px; }
-        .mine-btn { background: linear-gradient(45deg, #7000ff, #00e5ff); border: none; padding: 20px 40px; color: white; font-size: 20px; border-radius: 50px; cursor: pointer; }
+        .mine-btn { background: linear-gradient(45deg, #7000ff, #00e5ff); border: none; padding: 20px 40px; color: white; font-size: 20px; border-radius: 50px; cursor: pointer; transition: 0.3s; }
+        .mine-btn:disabled { background: #333; cursor: not-allowed; }
     </style>
 </head>
 <body>
     <h1>SEVEN Mining</h1>
     <div class="coin-display">SEVN: <span id="balance">0</span></div>
-    <button class="mine-btn" onclick="mine()">MINE SEVN</button>
+    <button id="mineBtn" class="mine-btn" onclick="mine()">MINE SEVN</button>
+    <p id="timer"></p>
 
     <script>
         let balance = 0;
         function mine() {
-            balance += 1;
+            balance += 100; // نموونەیا بڕا کۆینان
             document.getElementById('balance').innerText = balance;
+            document.getElementById('mineBtn').disabled = true;
+            
+            let timeleft = 24 * 60 * 60; // 24 دەمژمێر
+            let timer = setInterval(function() {
+                timeleft--;
+                document.getElementById('timer').innerText = "کلیمێ داهاتی پشتی: " + Math.floor(timeleft/3600) + " دەمژمێر";
+                if(timeleft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('mineBtn').disabled = false;
+                    document.getElementById('timer').innerText = "";
+                }
+            }, 1000);
         }
     </script>
 </body>
