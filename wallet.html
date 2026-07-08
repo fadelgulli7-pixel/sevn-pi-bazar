@@ -6,6 +6,16 @@
     <style>
         body { background: #0a0a12; color: #fff; text-align: center; padding: 20px; font-family: Arial; }
         .wallet-box { border: 2px solid #00e5ff; padding: 20px; border-radius: 15px; background: #151525; }
+        .withdraw-btn { 
+            background: linear-gradient(90deg, #ff00ff, #7000ff); 
+            border: none; 
+            padding: 15px 40px; 
+            color: white; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-size: 18px; 
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -13,8 +23,15 @@
     <div class="wallet-box">
         <p>Total Balance</p>
         <h1>10 SEVN</h1>
+        <button class="withdraw-btn" onclick="confirmWithdraw()">Withdraw SEVN</button>
     </div>
     <br>
     <a href="index.html" style="color: #00e5ff;">Back to Mining</a>
+
+    <script>
+        function confirmWithdraw() {
+            alert("Withdraw request submitted! Your SEVN will be sent to your wallet soon.");
+        }
+    </script>
 </body>
 </html>
