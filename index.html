@@ -12,12 +12,18 @@
             --dark: #050508;
         }
         body { 
-            background: radial-gradient(circle, #1a1a2e, var(--dark)); 
-            color: #fff; 
-            font-family: 'Segoe UI', sans-serif; 
-            text-align: center; 
-            padding: 20px; 
             margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            color: #fff;
+            /* باکگراوندێ فەزایی (Space Theme) */
+            background: radial-gradient(circle at center, #1b2735 0%, #050508 100%);
+            background-attachment: fixed;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
+            background-size: 550px 550px, 350px 350px;
         }
         .wallet-card { 
             background: linear-gradient(45deg, var(--primary), var(--secondary)); 
@@ -98,4 +104,3 @@
     </script>
 </body>
 </html>
-
