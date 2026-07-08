@@ -6,42 +6,43 @@
     <title>SEVEN Mining</title>
     <style>
         body { 
-            background: #0a0a12; color: #00e5ff; font-family: 'Segoe UI', sans-serif; 
-            text-align: center; padding: 20px; margin: 0;
+            background: radial-gradient(circle, #1a1a2e, #0a0a12); 
+            color: #fff; font-family: 'Segoe UI', sans-serif; 
+            text-align: center; padding: 20px; margin: 0; min-height: 100vh;
         }
-        h1 { color: #7000ff; margin-bottom: 20px; }
+        h1 { color: #00e5ff; margin-bottom: 20px; text-shadow: 0 0 10px #00e5ff; }
         
         /* والێت ل سەرێ */
-        .wallet-section { 
-            border: 2px solid #7000ff; padding: 15px; border-radius: 15px; 
-            background: rgba(112, 0, 255, 0.1); margin-bottom: 20px;
+        .wallet-card { 
+            background: linear-gradient(135deg, #7000ff, #00e5ff); 
+            padding: 25px; border-radius: 20px; margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(112, 0, 255, 0.4);
         }
-        .balance-text { font-size: 28px; font-weight: bold; color: #fff; }
+        .balance-text { font-size: 32px; font-weight: bold; }
         
         /* دوگمەیا ماینینگێ */
         .mine-btn { 
-            background: linear-gradient(45deg, #7000ff, #00e5ff); 
-            border: none; padding: 15px 40px; color: white; font-size: 20px; 
-            border-radius: 30px; cursor: pointer; margin: 10px 0;
+            background: #101020; border: 2px solid #00e5ff; 
+            padding: 20px 50px; color: #00e5ff; font-size: 22px; 
+            border-radius: 50px; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
         }
-        .mine-btn:disabled { background: #333; color: #888; cursor: not-allowed; }
+        .mine-btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
         
-        /* سێکشنا ئینڤایتێ ل خوارێ */
-        .invite-section { 
-            margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;
-        }
+        /* ئینڤایت ل خوارێ */
+        .invite-section { margin-top: 50px; }
         .invite-btn { 
-            background: transparent; border: 1px solid #00e5ff; padding: 8px 20px; 
-            color: #00e5ff; border-radius: 20px; cursor: pointer; font-size: 14px;
+            background: #7000ff; border: none; padding: 12px 30px; 
+            color: white; border-radius: 25px; cursor: pointer; font-size: 16px;
         }
-        #timer { color: #ff00ff; font-size: 16px; margin-top: 10px; }
+        #timer { color: #ff00ff; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
     <h1>SEVEN Mining</h1>
     
-    <div class="wallet-section">
-        <p style="margin:0; font-size: 14px;">Current Balance</p>
+    <div class="wallet-card">
+        <p style="margin:0; font-size: 14px; opacity: 0.8;">Current Balance</p>
         <div class="balance-text">SEVN: <span id="balance">10</span></div>
     </div>
 
@@ -49,8 +50,7 @@
     <p id="timer">Next claim in: 23h 59m</p>
 
     <div class="invite-section">
-        <p style="font-size: 14px; margin-bottom: 10px;">Invite Friends & Earn More!</p>
-        <button class="invite-btn" onclick="invite()">Copy Invite Link</button>
+        <button class="invite-btn" onclick="invite()">Invite Friends & Earn</button>
     </div>
 
     <script>
