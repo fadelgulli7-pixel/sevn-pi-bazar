@@ -2,76 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEVEN Mining</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>SEVEN Mining - TEST MODE</title>
     <style>
         body { background: #0a0a12; color: #fff; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .wallet-card { 
-            background: linear-gradient(135deg, #7000ff, #00e5ff); 
-            padding: 20px; border-radius: 15px; margin-bottom: 20px; 
-            border: 2px solid #fff; cursor: pointer; transition: 0.3s;
-        }
+        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
         .mine-btn { background: #222; border: 2px solid #00e5ff; padding: 15px 40px; color: #00e5ff; font-size: 18px; border-radius: 10px; cursor: pointer; }
         .mine-btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
-        .invite-section { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
-        .invite-btn { background: #00e5ff; color: #000; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>SEVEN Mining</h1>
-    
-    <div class="wallet-card" onclick="window.location.href='wallet.html'">
-        <div style="font-size: 14px;">Current Balance</div>
+    <h1>SEVEN Mining (TEST MODE)</h1>
+    <div class="wallet-card">
         <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 10</div>
     </div>
 
-    <button class="mine-btn" id="mineBtn" onclick="mineCoins()" disabled>MINE 0.5 SEVN</button>
-    <div id="timer" style="color: #ff00ff; margin-top: 10px;">Loading timer...</div>
-
-    <div class="invite-section">
-        <p>Invite a friend & get +3 SEVN bonus!</p>
-        <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
-    </div>
+    <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
+    <div id="timer" style="color: #ff00ff; margin-top: 10px;">Ready!</div>
 
     <script>
         let balance = 10;
-        let timeLeft = 86400; 
+        let timeLeft = 0; // تێست
         const timerDisplay = document.getElementById('timer');
         const mineBtn = document.getElementById('mineBtn');
         const balanceDisplay = document.getElementById('balance');
 
         function updateTimer() {
-            let h = Math.floor(timeLeft / 3600);
-            let m = Math.floor((timeLeft % 3600) / 60);
-            let s = timeLeft % 60;
-            
-            timerDisplay.innerText = `Next claim in: ${h}h ${m}m ${s}s`;
-            
-            if (timeLeft <= 0) {
-                clearInterval(interval);
+            if (timeLeft > 0) {
+                timerDisplay.innerText = `Next claim in: ${timeLeft}s`;
+                timeLeft--;
+            } else {
                 mineBtn.disabled = false;
                 timerDisplay.innerText = "Ready to mine!";
-            } else {
-                timeLeft--;
+                clearInterval(interval);
             }
         }
 
         function mineCoins() {
             balance += 0.5;
-            balanceDisplay.innerText = "SEVN: " + balance;
+            balanceDisplay.innerText = "SEVN: " + balance.toFixed(1);
             mineBtn.disabled = true;
-            timeLeft = 86400; 
+            timeLeft = 10; // 10 چرکا بۆ تێستێ
             interval = setInterval(updateTimer, 1000);
-            alert("تە 0.5 SEVN ب دەست ڤە ئینان!");
-        }
-
-        let interval = setInterval(updateTimer, 1000);
-
-        function copyLink() {
-            let link = "https://t.me/SEVEN_Coin_2026_bot/SevenApp";
-            navigator.clipboard.writeText(link);
-            alert("Invite link copied! (Bonus: 3 SEVN)");
+            alert("تە 0.5 SEVN وەرگرت!");
         }
     </script>
 </body>
