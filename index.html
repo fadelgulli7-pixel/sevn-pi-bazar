@@ -5,29 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEVEN Mining</title>
     <style>
-        body { background: #0a0a12; color: #00e5ff; font-family: 'Arial', sans-serif; text-align: center; padding: 20px; }
-        .coin-display { font-size: 30px; margin: 20px 0; border: 2px solid #7000ff; padding: 20px; border-radius: 15px; }
-        .mine-btn { background: linear-gradient(45deg, #7000ff, #00e5ff); border: none; padding: 20px 40px; color: white; font-size: 20px; border-radius: 50px; cursor: pointer; transition: 0.3s; }
+        body { 
+            background: #0a0a12; 
+            color: #00e5ff; 
+            font-family: 'Segoe UI', sans-serif; 
+            text-align: center; 
+            padding: 20px; 
+        }
+        h1 { color: #7000ff; }
+        .wallet-section { 
+            border: 2px solid #7000ff; 
+            padding: 20px; 
+            border-radius: 20px; 
+            background: rgba(112, 0, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        .balance-text { font-size: 24px; font-weight: bold; }
+        .mine-btn { 
+            background: linear-gradient(45deg, #7000ff, #00e5ff); 
+            border: none; 
+            padding: 20px 50px; 
+            color: white; 
+            font-size: 22px; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            transition: 0.3s;
+        }
         .mine-btn:disabled { background: #333; cursor: not-allowed; }
+        #timer { margin-top: 15px; color: #ff00ff; }
     </style>
 </head>
 <body>
     <h1>SEVEN Mining</h1>
-    <div class="coin-display">SEVN: <span id="balance">0</span></div>
+    
+    <div class="wallet-section">
+        <p>Your Wallet Balance</p>
+        <div class="balance-text">SEVN: <span id="balance">0</span></div>
+    </div>
+
     <button id="mineBtn" class="mine-btn" onclick="mine()">MINE SEVN</button>
     <p id="timer"></p>
 
     <script>
         let balance = 0;
         function mine() {
-            balance += 100; // نموونەیا بڕا کۆینان
+            balance += 100;
             document.getElementById('balance').innerText = balance;
             document.getElementById('mineBtn').disabled = true;
             
-            let timeleft = 24 * 60 * 60; // 24 دەمژمێر
+            let timeleft = 24 * 60 * 60; 
             let timer = setInterval(function() {
                 timeleft--;
-                document.getElementById('timer').innerText = "کلیمێ داهاتی پشتی: " + Math.floor(timeleft/3600) + " دەمژمێر";
+                let hours = Math.floor(timeleft / 3600);
+                let minutes = Math.floor((timeleft % 3600) / 60);
+                document.getElementById('timer').innerText = "Next claim in: " + hours + "h " + minutes + "m";
+                
                 if(timeleft <= 0) {
                     clearInterval(timer);
                     document.getElementById('mineBtn').disabled = false;
