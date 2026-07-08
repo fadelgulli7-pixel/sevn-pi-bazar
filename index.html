@@ -6,20 +6,17 @@
     <title>SEVEN Mining Pro</title>
     <style>
         :root { --primary: #ff00ff; --secondary: #00e5ff; --dark: #050508; }
-        body { margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif; text-align: center; color: #fff; background: radial-gradient(circle at center, #1b2735 0%, #050508 100%); background-attachment: fixed; overflow-x: hidden; }
-        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px); background-size: 550px 550px, 350px 350px; animation: twinkle 5s infinite alternate; z-index: -1; }
-        @keyframes twinkle { from { opacity: 0.5; } to { opacity: 1; } }
+        body { margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif; text-align: center; color: #fff; background: radial-gradient(circle at center, #1b2735 0%, #050508 100%); min-height: 100vh; overflow-x: hidden; }
         
         .wallet-card { background: linear-gradient(270deg, #7000ff, #00e5ff, #ff00ff); background-size: 600% 600%; animation: gradientShift 5s ease infinite; padding: 30px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 0 25px rgba(0, 229, 255, 0.3); }
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        .mine-btn { background: linear-gradient(90deg, #222, #000); border: 2px solid var(--secondary); padding: 20px 50px; color: var(--secondary); font-size: 20px; border-radius: 50px; cursor: pointer; transition: 0.4s; font-weight: bold; text-transform: uppercase; }
-        .mine-btn:hover { box-shadow: 0 0 20px var(--secondary); transform: scale(1.05); }
-        .mine-btn:active { transform: scale(0.95); }
+        .mine-btn { background: #222; border: 2px solid var(--secondary); padding: 20px 50px; color: var(--secondary); font-size: 20px; border-radius: 50px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .mine-btn:disabled { border-color: #444; color: #444; cursor: not-allowed; }
+        .mine-btn:active:not(:disabled) { transform: scale(0.95); }
         
-        .footer-stats { margin-top: 30px; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #333; }
-        .leaderboard { margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.5); border-radius: 15px; font-size: 13px; color: #aaa; }
-        .particle { position: absolute; font-size: 20px; pointer-events: none; animation: pop 1s ease-out forwards; }
+        .footer-stats { margin-top: 20px; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #333; }
+        .particle { position: absolute; font-size: 20px; pointer-events: none; animation: pop 1s ease-out forwards; z-index: 10; }
         @keyframes pop { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
     </style>
 </head>
@@ -28,8 +25,8 @@
     
     <div class="wallet-card">
         <div style="font-size: 16px; opacity: 0.8;">Current Balance</div>
-        <div id="balance" style="font-size: 40px; font-weight: bold; text-shadow: 0 0 10px #000;">SEVN: 10.0</div>
-        <div id="prediction" style="font-size: 12px; margin-top: 10px; color: #fff;">Est. Monthly: 15.0 SEVN</div>
+        <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 10.0</div>
+        <div id="prediction" style="font-size: 12px; margin-top: 10px;">Est. Monthly: 300.0 SEVN</div>
     </div>
 
     <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
@@ -42,42 +39,48 @@
         </div>
     </div>
 
-    <div class="leaderboard">
-        <strong>🏆 Leaderboard:</strong><br>
-        1. CryptoKing (500 SEVN) | 2. MineMaster (420 SEVN)
-    </div>
-
-    <div class="invite-section" style="margin-top: 20px;">
-        <button class="invite-btn" onclick="copyLink()" style="background: var(--secondary); border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">Copy Invite Link</button>
-    </div>
-
     <script>
-        let balance = 10;
+        let balance = 10.0;
+        let timeLeft = 0;
+        const timerDisplay = document.getElementById('timer');
+        const mineBtn = document.getElementById('mineBtn');
+
+        function updateTimer() {
+            if (timeLeft > 0) {
+                let h = Math.floor(timeLeft / 3600);
+                let m = Math.floor((timeLeft % 3600) / 60);
+                let s = timeLeft % 60;
+                timerDisplay.innerText = `Next claim in: ${h}h ${m}m ${s}s`;
+                timeLeft--;
+            } else {
+                clearInterval(window.timerInterval);
+                mineBtn.disabled = false;
+                timerDisplay.innerText = "Ready to mine!";
+            }
+        }
+
         function mineCoins() {
-            // 1. ڤایبرەیشن
             if (navigator.vibrate) navigator.vibrate(200);
 
-            // 2. بزاڤا پارتیکڵان (کوین)
+            // پارتیکل
             for(let i=0; i<3; i++) {
                 let p = document.createElement('div');
                 p.className = 'particle'; p.innerText = '🪙';
-                p.style.left = (Math.random() * 80 + 10) + '%';
-                p.style.top = '50%';
+                p.style.left = (Math.random() * 60 + 20) + '%';
+                p.style.top = '60%';
                 document.body.appendChild(p);
                 setTimeout(() => p.remove(), 1000);
             }
 
-            // 3. نویکرنا باڵانس و پێشبینی
             balance += 0.5;
             document.getElementById('balance').innerText = "SEVN: " + balance.toFixed(1);
             document.getElementById('prediction').innerText = "Est. Monthly: " + (balance * 30).toFixed(1) + " SEVN";
             
+            mineBtn.disabled = true;
+            timeLeft = 86400; // 24 دەمژمێر
+            window.timerInterval = setInterval(updateTimer, 1000);
+            
             alert("تە 0.5 SEVN ب دەست ڤە ئینان!");
-        }
-
-        function copyLink() {
-            navigator.clipboard.writeText("https://t.me/SEVEN_Coin_2026_bot/SevenApp");
-            alert("Invite link copied!");
         }
     </script>
 </body>
