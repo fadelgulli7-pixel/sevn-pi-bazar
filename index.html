@@ -1,34 +1,58 @@
-<script>
-    let balance = localStorage.getItem('sevn_balance') ? parseInt(localStorage.getItem('sevn_balance')) : 10;
-    const balanceDisplay = document.querySelector('.wallet-card div:last-child');
-    const mineBtn = document.getElementById('mineBtn');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEVEN Mining</title>
+    <style>
+        body { background: #0a0a12; color: #fff; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #fff; }
+        .mine-btn { background: #222; border: 2px solid #00e5ff; padding: 15px 40px; color: #00e5ff; font-size: 18px; border-radius: 10px; cursor: pointer; }
+        .mine-btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <h1>SEVEN Mining</h1>
+    
+    <div class="wallet-card">
+        <div>Current Balance</div>
+        <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 10</div>
+    </div>
 
-    // نیشاندانا کوینان
-    balanceDisplay.innerText = "SEVN: " + balance;
+    <button class="mine-btn" id="mineBtn" onclick="mine()">MINE 5 SEVN</button>
+    <div id="timer" style="color: #ff00ff; margin-top: 10px;">Ready to mine!</div>
 
-    function mine() {
-        balance += 5;
-        localStorage.setItem('sevn_balance', balance);
+    <script>
+        let balance = parseInt(localStorage.getItem('sevn_balance')) || 10;
+        const balanceDisplay = document.getElementById('balance');
+        const mineBtn = document.getElementById('mineBtn');
+        const timerDisplay = document.getElementById('timer');
+
         balanceDisplay.innerText = "SEVN: " + balance;
-        
-        // ئەڤە دێ دەمێ دووماهی ماینینگێ پاشەکەوت کەت
-        localStorage.setItem('last_mine_time', Date.now());
-        
-        alert("تە 5 SEVN ب دەست ڤە ئینان!");
-        mineBtn.disabled = true; // دوگمێ بێکار دکت
-        startTimer(); // دەستپێکرنا تایمەری
-    }
 
-    function startTimer() {
-        // لێرە تایمەرەکێ ٢٤ دەمژمێری دکت
-        let timer = 24 * 60 * 60; 
-        let interval = setInterval(() => {
-            timer--;
-            // لێرە تو دشێی تایمەری ل سەر شاشێ نیشان بدی
-            if (timer <= 0) {
-                clearInterval(interval);
-                mineBtn.disabled = false;
-            }
-        }, 1000);
-    }
-</script>
+        function mine() {
+            balance += 5;
+            localStorage.setItem('sevn_balance', balance);
+            balanceDisplay.innerText = "SEVN: " + balance;
+            
+            // دانا تایمەرێ
+            let timeLeft = 24 * 60 * 60;
+            mineBtn.disabled = true;
+
+            let interval = setInterval(() => {
+                let h = Math.floor(timeLeft / 3600);
+                let m = Math.floor((timeLeft % 3600) / 60);
+                let s = timeLeft % 60;
+                timerDisplay.innerText = `Next claim in: ${h}h ${m}m ${s}s`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    mineBtn.disabled = false;
+                    timerDisplay.innerText = "Ready to mine!";
+                }
+                timeLeft--;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
