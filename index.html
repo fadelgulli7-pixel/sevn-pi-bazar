@@ -30,13 +30,13 @@
     <div id="timer" style="color: #ff00ff; margin-top: 10px;">Loading timer...</div>
 
     <div class="invite-section">
-        <p>Invite a friend & get +10 SEVN bonus!</p>
+        <p>Invite a friend & get +3 SEVN bonus!</p>
         <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
     </div>
 
     <script>
         let balance = 10;
-        let timeLeft = 86400; // 24 دەمژمێر بـ چرکە
+        let timeLeft = 86400; 
         const timerDisplay = document.getElementById('timer');
         const mineBtn = document.getElementById('mineBtn');
         const balanceDisplay = document.getElementById('balance');
@@ -58,7 +58,7 @@
         }
 
         function mineCoins() {
-            balance += 0.5; // رێژەیا نوی یا مینینگێ
+            balance += 0.5;
             balanceDisplay.innerText = "SEVN: " + balance;
             mineBtn.disabled = true;
             timeLeft = 86400; 
@@ -71,7 +71,7 @@
         function copyLink() {
             let link = "https://t.me/SEVEN_Coin_2026_bot/SevenApp";
             navigator.clipboard.writeText(link);
-            alert("Invite link copied!");
+            alert("Invite link copied! (Bonus: 3 SEVN)");
         }
     </script>
 </body>
