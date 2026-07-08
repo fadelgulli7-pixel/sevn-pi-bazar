@@ -7,7 +7,15 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <style>
         body { background: #0a0a12; color: #fff; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #fff; }
+        
+        /* والێتێ چالاک دکەین */
+        .wallet-card { 
+            background: linear-gradient(135deg, #7000ff, #00e5ff); 
+            padding: 20px; border-radius: 15px; margin-bottom: 20px; 
+            border: 2px solid #fff; cursor: pointer; transition: 0.3s;
+        }
+        .wallet-card:hover { transform: scale(1.02); }
+        
         .mine-btn { background: #222; border: 2px solid #00e5ff; padding: 15px 40px; color: #00e5ff; font-size: 18px; border-radius: 10px; cursor: pointer; }
         .invite-section { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
         .invite-btn { background: #00e5ff; color: #000; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; }
@@ -15,8 +23,9 @@
 </head>
 <body>
     <h1>SEVEN Mining</h1>
-    <div class="wallet-card">
-        <div style="font-size: 14px;">Current Balance</div>
+    
+    <div class="wallet-card" onclick="window.location.href='wallet.html'">
+        <div style="font-size: 14px;">Current Balance (Click to view)</div>
         <div style="font-size: 30px; font-weight: bold;">SEVN: 10</div>
     </div>
 
@@ -32,7 +41,7 @@
         function copyLink() {
             let link = "https://t.me/SEVEN_Coin_2026_bot/SevenApp";
             navigator.clipboard.writeText(link);
-            alert("Invite link copied! Share to earn 10 SEVN.");
+            alert("Invite link copied!");
         }
     </script>
 </body>
