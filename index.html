@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEVEN Mining</title>
     <style>
-        body { background: #0a0a12; color: #fff; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        body { background: #0a0a12; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
         .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        .btn { background: #222; border: 2px solid #00e5ff; padding: 15px 30px; color: #00e5ff; border-radius: 10px; cursor: pointer; margin: 5px; }
+        .btn { background: #222; border: 2px solid #00e5ff; padding: 15px 30px; color: #00e5ff; border-radius: 10px; cursor: pointer; margin: 10px; width: 80%; }
         .btn:disabled { border-color: #555; color: #555; }
     </style>
 </head>
@@ -21,6 +21,10 @@
     <button class="btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
     <button class="btn" id="mineBtn" onclick="mine()" disabled>MINE 5 SEVN</button>
     <div id="timer" style="color: #ff00ff; margin-top: 10px;">Connect wallet to start</div>
+    
+    <div style="margin-top: 20px;">
+        <button class="btn" style="background:#00e5ff; color:#000;" onclick="copyInvite()">Copy Invite Link</button>
+    </div>
 
     <script>
         let balance = parseInt(localStorage.getItem('sevn_balance')) || 25;
@@ -28,6 +32,8 @@
         const mineBtn = document.getElementById('mineBtn');
         const walletDisplay = document.getElementById('walletAddr');
         const timerDisplay = document.getElementById('timer');
+
+        balanceDisplay.innerText = "SEVN: " + balance;
 
         async function connectWallet() {
             if (window.solana && window.solana.isPhantom) {
@@ -47,7 +53,7 @@
             balanceDisplay.innerText = "SEVN: " + balance;
             mineBtn.disabled = true;
             
-            let timeLeft = 10; // بۆ تێستێ دێ ١٠ چرکا بیت، تو دشێی بکەی 86400 بۆ ٢٤ دەمژمێرا
+            let timeLeft = 60; // دێ کێم کەم بو ٦٠ چرکا بو تێستێ
             let interval = setInterval(() => {
                 timerDisplay.innerText = `Next claim in: ${timeLeft}s`;
                 if (timeLeft <= 0) {
@@ -57,6 +63,11 @@
                 }
                 timeLeft--;
             }, 1000);
+        }
+
+        function copyInvite() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Invite link copied!");
         }
     </script>
 </body>
