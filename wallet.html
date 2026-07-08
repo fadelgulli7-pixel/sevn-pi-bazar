@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEVEN Wallet</title>
     <style>
-        body { background: #0a0a12; color: #fff; text-align: center; padding: 20px; font-family: Arial; }
-        .wallet-box { border: 2px solid #00e5ff; padding: 20px; border-radius: 15px; background: #151525; }
-        .btn { 
-            border: none; padding: 15px 40px; color: white; border-radius: 10px; 
-            cursor: pointer; font-size: 16px; margin-top: 10px; width: 200px;
-        }
+        body { background: #0a0a12; color: #fff; text-align: center; padding: 20px; font-family: sans-serif; }
+        .wallet-box { border: 2px solid #00e5ff; padding: 20px; border-radius: 15px; background: #151525; margin-bottom: 20px; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; background: #222; color: #fff; }
+        .btn { border: none; padding: 12px 30px; color: white; border-radius: 10px; cursor: pointer; font-size: 16px; margin: 5px; width: 80%; }
         .withdraw-btn { background: linear-gradient(90deg, #ff00ff, #7000ff); }
         .deposit-btn { background: linear-gradient(90deg, #00e5ff, #0077ff); }
     </style>
@@ -18,12 +17,25 @@
     <h2>My Wallet</h2>
     <div class="wallet-box">
         <p>Total Balance</p>
-        <h1>10 SEVN</h1>
-        <button class="btn withdraw-btn" onclick="alert('Withdraw requested!')">Withdraw SEVN</button>
-        <br>
-        <button class="btn deposit-btn" onclick="alert('Deposit address: 0xSEVN...89')">Deposit SEVN</button>
+        <h1 id="balance">10 SEVN</h1>
+        
+        <input type="text" id="walletAddress" placeholder="Enter your Wallet Address (SOL/TON)">
+        
+        <button class="btn withdraw-btn" onclick="process('Withdraw')">Withdraw SEVN</button>
+        <button class="btn deposit-btn" onclick="process('Deposit')">Deposit SEVN</button>
     </div>
     <br>
-    <a href="index.html" style="color: #00e5ff;">Back to Mining</a>
+    <a href="index.html" style="color: #00e5ff; text-decoration: none;">← Back to Mining</a>
+
+    <script>
+        function process(type) {
+            var address = document.getElementById("walletAddress").value;
+            if (address === "") {
+                alert("Please enter your wallet address first!");
+            } else {
+                alert(type + " request sent successfully for address: " + address);
+            }
+        }
+    </script>
 </body>
 </html>
