@@ -2,77 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEVEN Mining</title>
     <style>
         body { background: #0a0a12; color: #fff; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
         .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
         .mine-btn { background: #222; border: 2px solid #00e5ff; padding: 15px 40px; color: #00e5ff; font-size: 18px; border-radius: 10px; cursor: pointer; }
-        .mine-btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
-        .invite-btn { background: #00e5ff; color: #000; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        .mine-btn:disabled { border: 2px solid #555; color: #555; cursor: not-allowed; }
     </style>
 </head>
 <body>
     <h1>SEVEN Mining</h1>
     <div class="wallet-card">
-        <div id="walletStatus">Wallet Not Connected</div>
+        <div id="status">Wallet Not Connected</div>
         <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 26.5</div>
     </div>
 
     <button id="connectBtn" class="mine-btn" onclick="connectWallet()">Connect Wallet</button>
+    
     <button id="mineBtn" class="mine-btn" onclick="mineCoins()" disabled>MINE 0.5 SEVN</button>
+    
     <div id="timer" style="color: #ff00ff; margin-top: 10px;">Connect wallet to start</div>
-
-    <br><br>
-    <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
 
     <script>
         let balance = 26.5;
-        let timeLeft = 0;
-        const balanceDisplay = document.getElementById('balance');
         const mineBtn = document.getElementById('mineBtn');
         const connectBtn = document.getElementById('connectBtn');
         const timerDisplay = document.getElementById('timer');
 
-        // گرێدانا والێتێ
+        // فانکشنا گرێدانا والێتێ
         async function connectWallet() {
             if (window.solana && window.solana.isPhantom) {
                 const res = await window.solana.connect();
-                document.getElementById('walletStatus').innerText = "Wallet: " + res.publicKey.toString().slice(0, 6) + "...";
-                connectBtn.style.display = 'none';
-                mineBtn.disabled = false;
+                document.getElementById('status').innerText = "Wallet Connected!";
+                connectBtn.style.display = 'none'; // ڤەشارتنا دوگمێ گرێدانێ
+                mineBtn.disabled = false; // چالاککرنا مینینگێ
                 timerDisplay.innerText = "Ready to mine!";
             } else {
-                alert("Phantom Wallet not found!");
+                alert("Please open in Phantom Wallet browser!");
             }
         }
 
-        // تایمەر و مینینگ
-        function updateTimer() {
-            if (timeLeft > 0) {
-                let h = Math.floor(timeLeft / 3600);
-                let m = Math.floor((timeLeft % 3600) / 60);
-                let s = timeLeft % 60;
-                timerDisplay.innerText = `Next claim in: ${h}h ${m}m ${s}s`;
-                timeLeft--;
-            } else if (timeLeft === 0 && !mineBtn.disabled) {
-                timerDisplay.innerText = "Ready to mine!";
-            }
-        }
-
+        // فانکشنا مینینگێ
         function mineCoins() {
             balance += 0.5;
-            balanceDisplay.innerText = "SEVN: " + balance.toFixed(1);
+            document.getElementById('balance').innerText = "SEVN: " + balance.toFixed(1);
             mineBtn.disabled = true;
-            timeLeft = 86400;
-            setInterval(updateTimer, 1000);
-        }
-
-        setInterval(updateTimer, 1000);
-
-        function copyLink() {
-            navigator.clipboard.writeText("https://t.me/SEVEN_Coin_2026_bot/SevenApp");
-            alert("Invite link copied!");
+            let timeLeft = 86400; // 24 دەمژمێر
+            
+            let timer = setInterval(() => {
+                let h = Math.floor(timeLeft / 3600);
+                timerDisplay.innerText = `Next claim in: ${h}h...`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    mineBtn.disabled = false;
+                    timerDisplay.innerText = "Ready to mine!";
+                }
+                timeLeft--;
+            }, 1000);
         }
     </script>
 </body>
