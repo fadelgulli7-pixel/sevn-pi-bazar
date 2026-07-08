@@ -6,36 +6,34 @@
     <title>SEVEN Mining</title>
     <style>
         body { background: #0a0a12; color: #fff; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #fff; }
-        .btn { background: #222; border: 2px solid #00e5ff; padding: 15px 30px; color: #00e5ff; font-size: 16px; border-radius: 10px; cursor: pointer; margin: 10px; }
-        .btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        .btn { background: #222; border: 2px solid #00e5ff; padding: 15px 30px; color: #00e5ff; border-radius: 10px; cursor: pointer; margin: 5px; }
+        .btn:disabled { border-color: #555; color: #555; }
     </style>
 </head>
 <body>
     <h1>SEVEN Mining</h1>
-    
     <div class="wallet-card">
-        <div id="walletAddr">Connect Wallet to Start</div>
-        <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 10</div>
+        <div id="walletAddr">Wallet Not Connected</div>
+        <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 25</div>
     </div>
 
-    <button class="btn" onclick="connectWallet()">Connect Wallet</button>
+    <button class="btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
     <button class="btn" id="mineBtn" onclick="mine()" disabled>MINE 5 SEVN</button>
     <div id="timer" style="color: #ff00ff; margin-top: 10px;">Connect wallet to start</div>
 
     <script>
-        let balance = parseInt(localStorage.getItem('sevn_balance')) || 10;
+        let balance = parseInt(localStorage.getItem('sevn_balance')) || 25;
         const balanceDisplay = document.getElementById('balance');
         const mineBtn = document.getElementById('mineBtn');
-        const timerDisplay = document.getElementById('timer');
         const walletDisplay = document.getElementById('walletAddr');
-
-        balanceDisplay.innerText = "SEVN: " + balance;
+        const timerDisplay = document.getElementById('timer');
 
         async function connectWallet() {
             if (window.solana && window.solana.isPhantom) {
                 const res = await window.solana.connect();
                 walletDisplay.innerText = "Wallet: " + res.publicKey.toString().slice(0, 8) + "...";
+                document.getElementById('connectBtn').disabled = true;
                 mineBtn.disabled = false;
                 timerDisplay.innerText = "Ready to mine!";
             } else {
@@ -49,11 +47,9 @@
             balanceDisplay.innerText = "SEVN: " + balance;
             mineBtn.disabled = true;
             
-            let timeLeft = 86400; // 24 hours
+            let timeLeft = 10; // بۆ تێستێ دێ ١٠ چرکا بیت، تو دشێی بکەی 86400 بۆ ٢٤ دەمژمێرا
             let interval = setInterval(() => {
-                let h = Math.floor(timeLeft / 3600);
-                let m = Math.floor((timeLeft % 3600) / 60);
-                timerDisplay.innerText = `Next claim in: ${h}h ${m}m`;
+                timerDisplay.innerText = `Next claim in: ${timeLeft}s`;
                 if (timeLeft <= 0) {
                     clearInterval(interval);
                     mineBtn.disabled = false;
