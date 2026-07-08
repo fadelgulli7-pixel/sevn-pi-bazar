@@ -1,74 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEVEN Mining</title>
-    <style>
-        body { background: #0a0a12; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
-        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        .btn { background: #222; border: 2px solid #00e5ff; padding: 15px 30px; color: #00e5ff; border-radius: 10px; cursor: pointer; margin: 10px; width: 80%; }
-        .btn:disabled { border-color: #555; color: #555; }
-    </style>
-</head>
-<body>
-    <h1>SEVEN Mining</h1>
-    <div class="wallet-card">
-        <div id="walletAddr">Wallet Not Connected</div>
-        <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 25</div>
-    </div>
+async function connectWallet() {
+    // تێستکرنا ئەگەر یۆزەر ل ناڤ تێلیگرامێ بیت
+    if (window.Telegram && window.Telegram.WebApp) {
+        // ئەگەر ل ناڤ تێلیگرامێ بوو، مەجبوور دکەین ب براوسەرەکێ دی ڤەکەت
+        alert("تکایە کلیک ل سەر سێ خەتێن سەرێ شاشێ بکە و بێژە (Open in Browser) داکو والێتێ گرێ دەی!");
+        return;
+    }
 
-    <button class="btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
-    <button class="btn" id="mineBtn" onclick="mine()" disabled>MINE 5 SEVN</button>
-    <div id="timer" style="color: #ff00ff; margin-top: 10px;">Connect wallet to start</div>
-    
-    <div style="margin-top: 20px;">
-        <button class="btn" style="background:#00e5ff; color:#000;" onclick="copyInvite()">Copy Invite Link</button>
-    </div>
-
-    <script>
-        let balance = parseInt(localStorage.getItem('sevn_balance')) || 25;
-        const balanceDisplay = document.getElementById('balance');
-        const mineBtn = document.getElementById('mineBtn');
-        const walletDisplay = document.getElementById('walletAddr');
-        const timerDisplay = document.getElementById('timer');
-
-        balanceDisplay.innerText = "SEVN: " + balance;
-
-        async function connectWallet() {
-            if (window.solana && window.solana.isPhantom) {
-                const res = await window.solana.connect();
-                walletDisplay.innerText = "Wallet: " + res.publicKey.toString().slice(0, 8) + "...";
-                document.getElementById('connectBtn').disabled = true;
-                mineBtn.disabled = false;
-                timerDisplay.innerText = "Ready to mine!";
-            } else {
-                alert("Please install Phantom Wallet!");
-            }
-        }
-
-        function mine() {
-            balance += 5;
-            localStorage.setItem('sevn_balance', balance);
-            balanceDisplay.innerText = "SEVN: " + balance;
-            mineBtn.disabled = true;
-            
-            let timeLeft = 60; // دێ کێم کەم بو ٦٠ چرکا بو تێستێ
-            let interval = setInterval(() => {
-                timerDisplay.innerText = `Next claim in: ${timeLeft}s`;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    mineBtn.disabled = false;
-                    timerDisplay.innerText = "Ready to mine!";
-                }
-                timeLeft--;
-            }, 1000);
-        }
-
-        function copyInvite() {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Invite link copied!");
-        }
-    </script>
-</body>
-</html>
+    // لێرە کۆدێ گرێدانا والێتێ داناینە
+    if (window.solana && window.solana.isPhantom) {
+        const res = await window.solana.connect();
+        document.getElementById('walletAddr').innerText = "Connected: " + res.publicKey.toString().slice(0, 6) + "...";
+        document.getElementById('mineBtn').disabled = false; // دوگمێ کار دکەت!
+    } else {
+        alert("Please install Phantom Wallet!");
+    }
+}
