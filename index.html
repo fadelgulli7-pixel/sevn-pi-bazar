@@ -13,9 +13,14 @@
         
         .mine-btn { background: #222; border: 2px solid var(--secondary); padding: 20px 50px; color: var(--secondary); font-size: 20px; border-radius: 50px; cursor: pointer; transition: 0.3s; font-weight: bold; }
         .mine-btn:disabled { border-color: #444; color: #444; cursor: not-allowed; }
-        .mine-btn:active:not(:disabled) { transform: scale(0.95); }
         
         .footer-stats { margin-top: 20px; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #333; }
+        
+        /* چوارچۆڤا ڕەش یا Leaderboard */
+        .leaderboard-box { margin-top: 20px; padding: 15px; background: #000; border-radius: 15px; border: 1px solid #333; font-size: 14px; color: #fff; }
+        
+        .invite-btn { margin-top: 20px; background: var(--secondary); color: #000; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; }
+        
         .particle { position: absolute; font-size: 20px; pointer-events: none; animation: pop 1s ease-out forwards; z-index: 10; }
         @keyframes pop { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
     </style>
@@ -38,6 +43,14 @@
             <div><div style="font-size: 18px; font-weight: bold;">0.5/h</div><div style="font-size: 10px; color: #777;">Mining Rate</div></div>
         </div>
     </div>
+
+    <!-- Leaderboard ya rastkirî -->
+    <div class="leaderboard-box">
+        🏆 <strong>Leaderboard:</strong><br>
+        1. CryptoKing (500 SEVN) | 2. MineMaster (420 SEVN)
+    </div>
+
+    <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
 
     <script>
         let balance = 10.0;
@@ -62,7 +75,6 @@
         function mineCoins() {
             if (navigator.vibrate) navigator.vibrate(200);
 
-            // پارتیکل
             for(let i=0; i<3; i++) {
                 let p = document.createElement('div');
                 p.className = 'particle'; p.innerText = '🪙';
@@ -77,10 +89,14 @@
             document.getElementById('prediction').innerText = "Est. Monthly: " + (balance * 30).toFixed(1) + " SEVN";
             
             mineBtn.disabled = true;
-            timeLeft = 86400; // 24 دەمژمێر
+            timeLeft = 86400;
             window.timerInterval = setInterval(updateTimer, 1000);
-            
             alert("تە 0.5 SEVN ب دەست ڤە ئینان!");
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText("https://t.me/SEVEN_Coin_2026_bot/SevenApp");
+            alert("Invite link copied!");
         }
     </script>
 </body>
