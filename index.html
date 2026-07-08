@@ -10,7 +10,7 @@
             text-align: center; padding: 20px; 
         }
         h1 { color: #7000ff; }
-        .wallet-section { 
+        .wallet-section, .invite-section { 
             border: 2px solid #7000ff; padding: 20px; border-radius: 20px; 
             background: rgba(112, 0, 255, 0.1); margin-bottom: 20px;
         }
@@ -22,6 +22,10 @@
         }
         .mine-btn:disabled { background: #333; color: #888; cursor: not-allowed; }
         #timer { margin-top: 15px; color: #ff00ff; font-size: 18px; }
+        .invite-btn { 
+            background: #7000ff; border: none; padding: 10px 20px; 
+            color: white; border-radius: 10px; cursor: pointer; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -29,33 +33,23 @@
     
     <div class="wallet-section">
         <p>Current Balance</p>
-        <div class="balance-text">SEVN: <span id="balance">0</span></div>
+        <div class="balance-text">SEVN: <span id="balance">10</span></div>
     </div>
 
-    <button id="mineBtn" class="mine-btn" onclick="mine()">MINE 10 SEVN</button>
-    <p id="timer"></p>
+    <button id="mineBtn" class="mine-btn" disabled>MINE 10 SEVN</button>
+    <p id="timer">Next claim in: 23h 59m</p>
+
+    <div class="invite-section">
+        <p>Invite Friends & Earn More!</p>
+        <button class="invite-btn" onclick="invite()">Copy Invite Link</button>
+    </div>
 
     <script>
-        let balance = 0;
-        function mine() {
-            // زێدەکرنا 10 کۆینان بۆ هەر کلیمەکێ
-            balance += 10; 
-            document.getElementById('balance').innerText = balance;
-            document.getElementById('mineBtn').disabled = true;
-            
-            let timeleft = 24 * 60 * 60; // 24 دەمژمێر
-            let timer = setInterval(function() {
-                timeleft--;
-                let hours = Math.floor(timeleft / 3600);
-                let minutes = Math.floor((timeleft % 3600) / 60);
-                document.getElementById('timer').innerText = "Next claim in: " + hours + "h " + minutes + "m";
-                
-                if(timeleft <= 0) {
-                    clearInterval(timer);
-                    document.getElementById('mineBtn').disabled = false;
-                    document.getElementById('timer').innerText = "";
-                }
-            }, 1000);
+        // سیستەمێ رێفەرالێ (Invite)
+        function invite() {
+            let inviteLink = "https://t.me/SEVEN_Coin_2026_bot/SevenApp";
+            navigator.clipboard.writeText(inviteLink);
+            alert("Invite link copied: " + inviteLink);
         }
     </script>
 </body>
