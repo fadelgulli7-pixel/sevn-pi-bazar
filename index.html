@@ -1,63 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ku">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEVEN Mining</title>
     <style>
-        body { background: #0a0a12; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
+        body { background: #0a0a12; color: #fff; font-family: Tahoma, sans-serif; text-align: center; padding: 20px; }
         .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
         .btn { background: #222; border: 2px solid #00e5ff; padding: 15px 30px; color: #00e5ff; border-radius: 10px; cursor: pointer; margin: 10px; width: 80%; }
-        /* کاتێ دوگمێ Disabled بیت، رەنگێ وێ دێ گوهۆریت */
         .btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
     </style>
 </head>
 <body>
     <h1>SEVEN Mining</h1>
     <div class="wallet-card">
-        <div id="walletStatus">Wallet Not Connected</div>
-        <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 25</div>
+        <div id="status">والێت نەهاتیە گرێدان</div>
+        <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 26.5</div>
     </div>
 
-    <button class="btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
-    <button class="btn" id="mineBtn" onclick="startMining()" disabled>MINE 5 SEVN</button>
-    <div id="timer" style="color: #ff00ff; margin-top: 10px;">Connect wallet to start</div>
+    <button id="connectBtn" class="btn" onclick="connectWallet()">گرێدانا والێتێ</button>
+    <button id="mineBtn" class="btn" onclick="mineCoins()" disabled>کۆمکرنا 0.5 SEVN</button>
+    <div id="timer" style="color: #ff00ff; margin-top: 10px;">والێتێ گرێدە دا دەستپێ بکەی</div>
+
+    <br><br>
+    <button class="btn" style="background:#00e5ff; color:#000;" onclick="copyLink()">کۆپی کرنا لینکا داخوازێ</button>
 
     <script>
-        const connectBtn = document.getElementById('connectBtn');
+        let balance = 26.5;
+        let timeLeft = 0;
+        const balanceDisplay = document.getElementById('balance');
         const mineBtn = document.getElementById('mineBtn');
+        const connectBtn = document.getElementById('connectBtn');
         const timerDisplay = document.getElementById('timer');
-        const walletStatus = document.getElementById('walletStatus');
 
-        // 1. گرێدانا والێتێ
+        // گرێدانا والێتێ
         async function connectWallet() {
             if (window.solana && window.solana.isPhantom) {
-                try {
-                    const res = await window.solana.connect();
-                    walletStatus.innerText = "Wallet: " + res.publicKey.toString().slice(0, 8) + "...";
-                    connectBtn.disabled = true;
-                    mineBtn.disabled = false; // دوگمێ مینینگێ چالاک دکەت
-                    timerDisplay.innerText = "Ready to mine!";
-                } catch (err) { alert("Connection failed!"); }
+                const res = await window.solana.connect();
+                document.getElementById('status').innerText = "والێت هاتە گرێدان!";
+                connectBtn.style.display = 'none';
+                mineBtn.disabled = false;
+                timerDisplay.innerText = "یا حازرە بۆ کۆمکرنێ!";
             } else {
-                alert("Please install/open Phantom Wallet!");
+                alert("تکایە فانتۆم والێتێ دابەزینە!");
             }
         }
 
-        // 2. مینینگ
-        function startMining() {
-            mineBtn.disabled = true;
-            let timeLeft = 60; // تو دشێی بکەی 86400 بۆ 24 دەمژمێران
-            
-            let interval = setInterval(() => {
-                timerDisplay.innerText = `Next claim in: ${timeLeft}s`;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    mineBtn.disabled = false; // دوگمێ دیسا چالاک دکەت
-                    timerDisplay.innerText = "Ready to mine!";
-                }
+        // تایمەر و مینینگ
+        function updateTimer() {
+            if (timeLeft > 0) {
+                let h = Math.floor(timeLeft / 3600);
+                let m = Math.floor((timeLeft % 3600) / 60);
+                let s = timeLeft % 60;
+                timerDisplay.innerText = `کۆمکرنا داهاتی پشتی: ${h}س ${m}د ${s}چ`;
                 timeLeft--;
-            }, 1000);
+            } else if (timeLeft === 0 && !mineBtn.disabled) {
+                timerDisplay.innerText = "یا حازرە بۆ کۆمکرنێ!";
+            }
+        }
+
+        function mineCoins() {
+            balance += 0.5;
+            balanceDisplay.innerText = "SEVN: " + balance.toFixed(1);
+            mineBtn.disabled = true;
+            timeLeft = 86400; // 24 دەمژمێر
+            setInterval(updateTimer, 1000);
+            alert("تە 0.5 SEVN بـ سەرکەفتن بـ دەست ڤە ئینان!");
+        }
+
+        setInterval(updateTimer, 1000);
+
+        function copyLink() {
+            navigator.clipboard.writeText("https://t.me/SEVEN_Coin_2026_bot/SevenApp");
+            alert("لینکا داخوازێ هاتە کۆپیکرن!");
         }
     </script>
 </body>
