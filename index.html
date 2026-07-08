@@ -6,45 +6,48 @@
     <title>SEVEN Mining Pro</title>
     <style>
         :root { --primary: #ff00ff; --secondary: #00e5ff; --dark: #050508; }
-        body { margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif; text-align: center; color: #fff; background: radial-gradient(circle at center, #1b2735 0%, #050508 100%); min-height: 100vh; overflow-x: hidden; }
+        body { margin: 0; padding: 20px; font-family: sans-serif; text-align: center; color: #fff; background-color: #050508; }
         
-        .wallet-card { background: linear-gradient(270deg, #7000ff, #00e5ff, #ff00ff); background-size: 600% 600%; animation: gradientShift 5s ease infinite; padding: 30px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 0 25px rgba(0, 229, 255, 0.3); }
-        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        /* The Blue Gradient Card */
+        .wallet-card { 
+            background: linear-gradient(135deg, #7000ff, #00e5ff);
+            padding: 30px; border-radius: 20px; margin-bottom: 20px;
+        }
         
-        .mine-btn { background: #222; border: 2px solid var(--secondary); padding: 20px 50px; color: var(--secondary); font-size: 20px; border-radius: 50px; cursor: pointer; transition: 0.3s; font-weight: bold; }
-        .mine-btn:disabled { border-color: #444; color: #444; cursor: not-allowed; }
+        .mine-btn { 
+            background: #222; border: 2px solid #333; padding: 20px 80px; 
+            color: #555; font-size: 20px; border-radius: 15px; font-weight: bold;
+        }
         
-        .footer-stats { margin-top: 20px; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #333; }
+        /* Stats & Leaderboard styling */
+        .stats-box, .leaderboard-box { 
+            background: #111; border: 1px solid #333; padding: 20px; 
+            border-radius: 15px; margin-top: 20px; color: #aaa;
+        }
         
-        /* چوارچۆڤا ڕەش یا Leaderboard */
-        .leaderboard-box { margin-top: 20px; padding: 15px; background: #000; border-radius: 15px; border: 1px solid #333; font-size: 14px; color: #fff; }
-        
-        .invite-btn { margin-top: 20px; background: var(--secondary); color: #000; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; }
-        
-        .particle { position: absolute; font-size: 20px; pointer-events: none; animation: pop 1s ease-out forwards; z-index: 10; }
-        @keyframes pop { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
+        .invite-btn { 
+            background: #00e5ff; color: #000; border: none; padding: 15px 60px; 
+            border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>SEVEN Mining</h1>
     
     <div class="wallet-card">
-        <div style="font-size: 16px; opacity: 0.8;">Current Balance</div>
-        <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 10.0</div>
-        <div id="prediction" style="font-size: 12px; margin-top: 10px;">Est. Monthly: 300.0 SEVN</div>
+        <div style="font-size: 14px;">Current Balance</div>
+        <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 10.5</div>
+        <div id="prediction" style="font-size: 12px; margin-top: 5px;">Est. Monthly: 315.0 SEVN</div>
     </div>
 
-    <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
-    <div id="timer" style="color: var(--primary); margin-top: 15px; font-weight: bold;">Ready to mine!</div>
+    <button class="mine-btn" disabled>MINE 0.5 SEVN</button>
+    <div id="timer" style="color: var(--primary); margin-top: 15px; font-weight: bold;">Next claim in: 23h 59m 33s</div>
 
-    <div class="footer-stats">
-        <div style="display: flex; justify-content: space-around;">
-            <div><div style="font-size: 18px; font-weight: bold;">12.4k</div><div style="font-size: 10px; color: #777;">Active Miners</div></div>
-            <div><div style="font-size: 18px; font-weight: bold;">0.5/h</div><div style="font-size: 10px; color: #777;">Mining Rate</div></div>
-        </div>
+    <div class="stats-box" style="display: flex; justify-content: space-around;">
+        <div><div style="font-size: 18px; color: #fff;">12.4k</div><div style="font-size: 10px;">Active Miners</div></div>
+        <div><div style="font-size: 18px; color: #fff;">0.5/h</div><div style="font-size: 10px;">Mining Rate</div></div>
     </div>
 
-    <!-- Leaderboard ya rastkirî -->
     <div class="leaderboard-box">
         🏆 <strong>Leaderboard:</strong><br>
         1. CryptoKing (500 SEVN) | 2. MineMaster (420 SEVN)
@@ -53,47 +56,6 @@
     <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
 
     <script>
-        let balance = 10.0;
-        let timeLeft = 0;
-        const timerDisplay = document.getElementById('timer');
-        const mineBtn = document.getElementById('mineBtn');
-
-        function updateTimer() {
-            if (timeLeft > 0) {
-                let h = Math.floor(timeLeft / 3600);
-                let m = Math.floor((timeLeft % 3600) / 60);
-                let s = timeLeft % 60;
-                timerDisplay.innerText = `Next claim in: ${h}h ${m}m ${s}s`;
-                timeLeft--;
-            } else {
-                clearInterval(window.timerInterval);
-                mineBtn.disabled = false;
-                timerDisplay.innerText = "Ready to mine!";
-            }
-        }
-
-        function mineCoins() {
-            if (navigator.vibrate) navigator.vibrate(200);
-
-            for(let i=0; i<3; i++) {
-                let p = document.createElement('div');
-                p.className = 'particle'; p.innerText = '🪙';
-                p.style.left = (Math.random() * 60 + 20) + '%';
-                p.style.top = '60%';
-                document.body.appendChild(p);
-                setTimeout(() => p.remove(), 1000);
-            }
-
-            balance += 0.5;
-            document.getElementById('balance').innerText = "SEVN: " + balance.toFixed(1);
-            document.getElementById('prediction').innerText = "Est. Monthly: " + (balance * 30).toFixed(1) + " SEVN";
-            
-            mineBtn.disabled = true;
-            timeLeft = 86400;
-            window.timerInterval = setInterval(updateTimer, 1000);
-            alert("تە 0.5 SEVN ب دەست ڤە ئینان!");
-        }
-
         function copyLink() {
             navigator.clipboard.writeText("https://t.me/SEVEN_Coin_2026_bot/SevenApp");
             alert("Invite link copied!");
