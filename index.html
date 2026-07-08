@@ -68,5 +68,66 @@
             alert("Invite link copied!");
         }
     </script>
-</body>
+</body><!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <title>SEVEN Mining</title>
+    <style>
+        body { background: #0a0a12; color: #fff; font-family: Tahoma, sans-serif; text-align: center; padding: 20px; }
+        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        .btn { background: #222; border: 2px solid #00e5ff; padding: 15px 30px; color: #00e5ff; border-radius: 10px; cursor: pointer; margin: 10px; width: 80%; }
+        .btn:disabled { border-color: #555; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>SEVEN Mining</h1>
+    <div class="wallet-card">
+        <div id="walletAddr">والێت نەهاتیە گرێدان</div>
+        <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 25</div>
+    </div>
+
+    <button class="btn" id="connectBtn" onclick="connectWallet()">گرێدانا والێتێ</button>
+    <button class="btn" id="mineBtn" onclick="mine()" disabled>کۆمکرنا 5 SEVN</button>
+    <div id="timer" style="color: #ff00ff; margin-top: 10px;">والێتێ گرێدە دا دەستپێ بکەی</div>
+    
+    <div style="margin-top: 20px;">
+        <button class="btn" style="background:#00e5ff; color:#000;" onclick="copyInvite()">کۆپی کرنا لینکا داخوازێ</button>
+    </div>
+
+    <script>
+        let balance = parseInt(localStorage.getItem('sevn_balance')) || 25;
+        const balanceDisplay = document.getElementById('balance');
+        const mineBtn = document.getElementById('mineBtn');
+        const walletDisplay = document.getElementById('walletAddr');
+        const timerDisplay = document.getElementById('timer');
+
+        async function connectWallet() {
+            if (window.solana && window.solana.isPhantom) {
+                const res = await window.solana.connect();
+                walletDisplay.innerText = "والێت: " + res.publicKey.toString().slice(0, 8) + "...";
+                document.getElementById('connectBtn').disabled = true;
+                mineBtn.disabled = false;
+                timerDisplay.innerText = "یا حازرە بۆ کۆمکرنێ!";
+            } else {
+                alert("تکایە فانتۆم والێتێ ل براوسەرێ خۆ دابەزینە!");
+            }
+        }
+
+        function mine() {
+            balance += 5;
+            localStorage.setItem('sevn_balance', balance);
+            balanceDisplay.innerText = "SEVN: " + balance;
+            mineBtn.disabled = true;
+            
+            let timeLeft = 60; 
+            let interval = setInterval(() => {
+                timerDisplay.innerText = `کۆمکرنا داهاتی پشتی: ${timeLeft} چرکان`;
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    mineBtn.disabled = false;
+                    timerDisplay.innerText = "یا حازرە بۆ کۆمکرنێ!";
+                }
+                timeLeft--;
+
 </html>
