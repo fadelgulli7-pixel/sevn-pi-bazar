@@ -1,17 +1,49 @@
-async function connectWallet() {
-    // تێستکرنا ئەگەر یۆزەر ل ناڤ تێلیگرامێ بیت
-    if (window.Telegram && window.Telegram.WebApp) {
-        // ئەگەر ل ناڤ تێلیگرامێ بوو، مەجبوور دکەین ب براوسەرەکێ دی ڤەکەت
-        alert("تکایە کلیک ل سەر سێ خەتێن سەرێ شاشێ بکە و بێژە (Open in Browser) داکو والێتێ گرێ دەی!");
-        return;
+<script>
+    let balance = parseInt(localStorage.getItem('sevn_balance')) || 25;
+    const balanceDisplay = document.getElementById('balance');
+    const mineBtn = document.getElementById('mineBtn');
+    const timerDisplay = document.getElementById('timer');
+    const connectBtn = document.getElementById('connectBtn');
+
+    // لێرە ئەم دزڤرینین کو ئەرێ پێشتر والێت هاتیە گرێدان؟
+    if (localStorage.getItem('wallet_connected')) {
+        connectBtn.disabled = true;
+        mineBtn.disabled = false;
+        timerDisplay.innerText = "Ready to mine!";
     }
 
-    // لێرە کۆدێ گرێدانا والێتێ داناینە
-    if (window.solana && window.solana.isPhantom) {
-        const res = await window.solana.connect();
-        document.getElementById('walletAddr').innerText = "Connected: " + res.publicKey.toString().slice(0, 6) + "...";
-        document.getElementById('mineBtn').disabled = false; // دوگمێ کار دکەت!
-    } else {
-        alert("Please install Phantom Wallet!");
+    async function connectWallet() {
+        if (window.solana && window.solana.isPhantom) {
+            try {
+                const res = await window.solana.connect();
+                document.getElementById('walletAddr').innerText = "Wallet: " + res.publicKey.toString().slice(0, 6) + "...";
+                localStorage.setItem('wallet_connected', 'true');
+                connectBtn.disabled = true;
+                mineBtn.disabled = false;
+                timerDisplay.innerText = "Ready to mine!";
+            } catch (err) {
+                alert("Connection failed!");
+            }
+        } else {
+            alert("Please use a browser with Phantom Wallet installed (e.g., Kiwi or Chrome)");
+        }
     }
-}
+
+    function mine() {
+        balance += 5;
+        localStorage.setItem('sevn_balance', balance);
+        balanceDisplay.innerText = "SEVN: " + balance;
+        mineBtn.disabled = true;
+        
+        let timeLeft = 60; // دێ ٦٠ چرکا بیت بۆ تێستێ
+        let interval = setInterval(() => {
+            timerDisplay.innerText = `Next claim in: ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                mineBtn.disabled = false;
+                timerDisplay.innerText = "Ready to mine!";
+            }
+            timeLeft--;
+        }, 1000);
+    }
+</script>
