@@ -1,20 +1,34 @@
 <script>
-    // پاشەکەوتکرنا کوینان
     let balance = localStorage.getItem('sevn_balance') ? parseInt(localStorage.getItem('sevn_balance')) : 10;
-    document.querySelector('.wallet-card div:last-child').innerText = "SEVN: " + balance;
+    const balanceDisplay = document.querySelector('.wallet-card div:last-child');
+    const mineBtn = document.getElementById('mineBtn');
+
+    // نیشاندانا کوینان
+    balanceDisplay.innerText = "SEVN: " + balance;
 
     function mine() {
         balance += 5;
         localStorage.setItem('sevn_balance', balance);
-        document.querySelector('.wallet-card div:last-child').innerText = "SEVN: " + balance;
-        alert("تە 5 SEVN ب دەست ڤە ئینان!");
+        balanceDisplay.innerText = "SEVN: " + balance;
         
-        // لێرە دەستپێکرنا تایمەرێ (بۆ ئاسانکاری، لێرە تو دشێی تایمەرەکێ 24 دەمژمێری دانی)
+        // ئەڤە دێ دەمێ دووماهی ماینینگێ پاشەکەوت کەت
+        localStorage.setItem('last_mine_time', Date.now());
+        
+        alert("تە 5 SEVN ب دەست ڤە ئینان!");
+        mineBtn.disabled = true; // دوگمێ بێکار دکت
+        startTimer(); // دەستپێکرنا تایمەری
     }
 
-    function copyLink() {
-        let link = "https://t.me/SEVEN_Coin_2026_bot/SevenApp";
-        navigator.clipboard.writeText(link);
-        alert("Invite link copied!");
+    function startTimer() {
+        // لێرە تایمەرەکێ ٢٤ دەمژمێری دکت
+        let timer = 24 * 60 * 60; 
+        let interval = setInterval(() => {
+            timer--;
+            // لێرە تو دشێی تایمەری ل سەر شاشێ نیشان بدی
+            if (timer <= 0) {
+                clearInterval(interval);
+                mineBtn.disabled = false;
+            }
+        }, 1000);
     }
 </script>
