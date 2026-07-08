@@ -4,68 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEVEN Mining</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <style>
-        body { 
-            background: #0a0a12; 
-            color: #fff; 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            padding: 20px; 
-            margin: 0;
-        }
-        h1 { color: #00e5ff; margin-bottom: 20px; }
-        
-        /* والێت */
-        .wallet-card { 
-            background: linear-gradient(135deg, #7000ff, #00e5ff); 
-            padding: 20px; 
-            border-radius: 15px; 
-            margin-bottom: 20px;
-            border: 2px solid #fff;
-        }
-        .balance-label { font-size: 14px; opacity: 0.9; }
-        .balance-value { font-size: 28px; font-weight: bold; }
-        
-        /* دوگمەیا ماینینگێ */
-        .mine-btn { 
-            background: #222; 
-            border: 2px solid #444; 
-            padding: 15px 40px; 
-            color: #888; 
-            font-size: 18px; 
-            border-radius: 10px; 
-            margin: 10px 0;
-        }
-        
-        /* ئینڤایت */
-        .invite-btn { 
-            background: #7000ff; 
-            border: none; 
-            padding: 12px 30px; 
-            color: white; 
-            border-radius: 10px; 
-            margin-top: 20px;
-        }
-        #timer { color: #ff00ff; margin-top: 10px; }
+        body { background: #0a0a12; color: #fff; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #fff; }
+        .mine-btn { background: #222; border: 2px solid #00e5ff; padding: 15px 40px; color: #00e5ff; font-size: 18px; border-radius: 10px; cursor: pointer; }
+        .invite-section { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
+        .invite-btn { background: #00e5ff; color: #000; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
     <h1>SEVEN Mining</h1>
-    
     <div class="wallet-card">
-        <div class="balance-label">Current Balance</div>
-        <div class="balance-value">SEVN: 10</div>
+        <div style="font-size: 14px;">Current Balance</div>
+        <div style="font-size: 30px; font-weight: bold;">SEVN: 10</div>
     </div>
 
     <button class="mine-btn" disabled>MINE 10 SEVN</button>
-    <div id="timer">Next claim in: 23h 59m</div>
+    <div id="timer" style="color: #ff00ff; margin-top: 10px;">Next claim in: 23h 59m</div>
 
-    <button class="invite-btn" onclick="copyLink()">Invite Friends & Earn</button>
+    <div class="invite-section">
+        <p>Invite a friend & get +10 SEVN bonus!</p>
+        <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
+    </div>
 
     <script>
         function copyLink() {
-            navigator.clipboard.writeText("https://t.me/SEVEN_Coin_2026_bot/SevenApp");
-            alert("Invite link copied!");
+            let link = "https://t.me/SEVEN_Coin_2026_bot/SevenApp";
+            navigator.clipboard.writeText(link);
+            alert("Invite link copied! Share it to earn more.");
         }
     </script>
 </body>
