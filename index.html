@@ -2,11 +2,12 @@
 <html lang="ku">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEVEN Mining</title>
     <style>
         body { background: #0a0a12; color: #fff; font-family: Tahoma, sans-serif; text-align: center; padding: 20px; }
         .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        .btn { background: #222; border: 2px solid #00e5ff; padding: 15px 30px; color: #00e5ff; border-radius: 10px; cursor: pointer; margin: 10px; width: 80%; }
+        .btn { background: #222; border: 2px solid #00e5ff; padding: 15px 30px; color: #00e5ff; border-radius: 10px; cursor: pointer; margin: 10px; width: 80%; font-size: 16px; }
         .btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
     </style>
 </head>
@@ -35,11 +36,13 @@
         // گرێدانا والێتێ
         async function connectWallet() {
             if (window.solana && window.solana.isPhantom) {
-                const res = await window.solana.connect();
-                document.getElementById('status').innerText = "والێت هاتە گرێدان!";
-                connectBtn.style.display = 'none';
-                mineBtn.disabled = false;
-                timerDisplay.innerText = "یا حازرە بۆ کۆمکرنێ!";
+                try {
+                    const res = await window.solana.connect();
+                    document.getElementById('status').innerText = "والێت هاتە گرێدان!";
+                    connectBtn.style.display = 'none';
+                    mineBtn.disabled = false;
+                    timerDisplay.innerText = "یا حازرە بۆ کۆمکرنێ!";
+                } catch (err) { alert("گرێدان سەرنەکەفت!"); }
             } else {
                 alert("تکایە فانتۆم والێتێ دابەزینە!");
             }
@@ -51,7 +54,7 @@
                 let h = Math.floor(timeLeft / 3600);
                 let m = Math.floor((timeLeft % 3600) / 60);
                 let s = timeLeft % 60;
-                timerDisplay.innerText = `کۆمکرنا داهاتی پشتی: ${h}س ${m}د ${s}چ`;
+                timerDisplay.innerText = `دەمێ مایی: ${h}س ${m}د ${s}چ`;
                 timeLeft--;
             } else if (timeLeft === 0 && !mineBtn.disabled) {
                 timerDisplay.innerText = "یا حازرە بۆ کۆمکرنێ!";
@@ -62,9 +65,8 @@
             balance += 0.5;
             balanceDisplay.innerText = "SEVN: " + balance.toFixed(1);
             mineBtn.disabled = true;
-            timeLeft = 86400; // 24 دەمژمێر
-            setInterval(updateTimer, 1000);
-            alert("تە 0.5 SEVN بـ سەرکەفتن بـ دەست ڤە ئینان!");
+            timeLeft = 86400; // 24 دەمژمێر بـ چرکە
+            alert("تە 0.5 SEVN وەرگرت!");
         }
 
         setInterval(updateTimer, 1000);
