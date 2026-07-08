@@ -1,49 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ku">
 <head>
     <meta charset="UTF-8">
-    <title>SEVEN Mining - TEST MODE</title>
+    <title>تێستا والێتێ و مینینگێ</title>
     <style>
-        body { background: #0a0a12; color: #fff; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        .mine-btn { background: #222; border: 2px solid #00e5ff; padding: 15px 40px; color: #00e5ff; font-size: 18px; border-radius: 10px; cursor: pointer; }
-        .mine-btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+        body { background: #1a1a2e; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
+        .box { border: 2px solid #00e5ff; padding: 20px; border-radius: 15px; margin: 10px; }
+        button { padding: 15px 30px; margin: 10px; cursor: pointer; border-radius: 10px; border: none; background: #00e5ff; color: #000; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>SEVEN Mining (TEST MODE)</h1>
-    <div class="wallet-card">
-        <div id="balance" style="font-size: 30px; font-weight: bold;">SEVN: 10</div>
+    <h1>قۆناغا تێستکرنێ</h1>
+    
+    <div class="box">
+        <div id="walletInfo">والێت نەهاتیە گرێدان</div>
+        <button onclick="testWallet()">گرێدانا والێتێ تاقی بکە</button>
     </div>
 
-    <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
-    <div id="timer" style="color: #ff00ff; margin-top: 10px;">Ready!</div>
+    <div class="box">
+        <div id="mineStatus">حازرە بۆ مینینگێ</div>
+        <button onclick="testMining()">مینینگێ تاقی بکە</button>
+    </div>
 
     <script>
-        let balance = 10;
-        let timeLeft = 0; // تێست
-        const timerDisplay = document.getElementById('timer');
-        const mineBtn = document.getElementById('mineBtn');
-        const balanceDisplay = document.getElementById('balance');
-
-        function updateTimer() {
-            if (timeLeft > 0) {
-                timerDisplay.innerText = `Next claim in: ${timeLeft}s`;
-                timeLeft--;
+        // تێستا گرێدانا والێتێ
+        async function testWallet() {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    const res = await window.solana.connect();
+                    document.getElementById('walletInfo').innerText = "والێت سەرکەفت: " + res.publicKey.toString().slice(0, 10) + "...";
+                } catch (err) { alert("گرێدان سەرنەکەفت!"); }
             } else {
-                mineBtn.disabled = false;
-                timerDisplay.innerText = "Ready to mine!";
-                clearInterval(interval);
+                alert("فانتۆم والێت نەهاتە دیتن! ل براوسەرێ تێلیگرامێ یان فانتۆم ڤەکە.");
             }
         }
 
-        function mineCoins() {
-            balance += 0.5;
-            balanceDisplay.innerText = "SEVN: " + balance.toFixed(1);
-            mineBtn.disabled = true;
-            timeLeft = 10; // 10 چرکا بۆ تێستێ
-            interval = setInterval(updateTimer, 1000);
-            alert("تە 0.5 SEVN وەرگرت!");
+        // تێستا لۆژیکا مینینگێ
+        function testMining() {
+            let current = parseFloat(document.getElementById('mineStatus').innerText) || 0;
+            let newVal = current + 0.5;
+            document.getElementById('mineStatus').innerText = newVal + " SEVN زێدەبوو!";
+            alert("مینینگ کار دکەت! تە 0.5 SEVN وەرگرت.");
         }
     </script>
 </body>
