@@ -8,25 +8,31 @@
         :root { --primary: #00e5ff; }
         body { 
             margin: 0; padding: 20px; font-family: sans-serif; text-align: center; color: #fff;
-            /* وێنەیێ تە یێ ل سەرێ دانای وەک بەگرەوند */
-            background-image: url('67246.jpg');
+            /* دانانا وێنەیێ نوی وەک بەگرەوند */
+            background-image: url('67728.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             min-height: 100vh;
         }
         
-        /* بۆ زێدەکرنا ڕەنگی ل سەر وێنەی دا ناڤەڕۆک بـ ئاسانی بێتە خواندن */
-        .overlay { background: rgba(5, 5, 8, 0.85); min-height: 100vh; padding: 20px; border-radius: 20px; }
+        /* بۆ لێدانا ڕەنگێ تاریک ل سەر وێنەی دا ناڤەڕۆک بـ ئاسانی بێتە خواندن */
+        .overlay { 
+            background: rgba(5, 5, 8, 0.7); 
+            min-height: 100vh; 
+            padding: 20px; 
+            border-radius: 20px; 
+        }
 
         .wallet-card { 
-            background: linear-gradient(135deg, rgba(112, 0, 255, 0.8), rgba(0, 229, 255, 0.8));
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.7), rgba(0, 229, 255, 0.7));
             padding: 30px; border-radius: 25px; margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .mine-btn { 
-            background: linear-gradient(90deg, #222, #000); 
+            background: #111; 
             border: 2px solid var(--primary); padding: 20px 60px; 
             color: var(--primary); font-size: 20px; border-radius: 50px; 
             cursor: pointer; font-weight: bold; transition: 0.3s;
@@ -34,12 +40,12 @@
         .mine-btn:disabled { border-color: #444; color: #444; cursor: not-allowed; }
         
         .box { 
-            background: rgba(0, 0, 0, 0.6); 
+            background: rgba(0, 0, 0, 0.5); 
             border: 1px solid #333; 
             padding: 20px; 
             border-radius: 20px; 
             margin-top: 20px; 
-            color: #aaa;
+            color: #ccc;
         }
         
         .invite-btn { 
@@ -54,7 +60,7 @@
         
         <div class="wallet-card">
             <div style="font-size: 14px; opacity: 0.8;">Current Balance</div>
-            <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 10.5</div>
+            <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 11.0</div>
             <div id="prediction" style="font-size: 12px; margin-top: 5px;">Est. Monthly: 315.0 SEVN</div>
         </div>
 
@@ -75,7 +81,7 @@
     </div>
 
     <script>
-        let balance = 10.5;
+        let balance = 11.0; // باڵانسێ نوی یێ وێنەی
         const balanceDisplay = document.getElementById('balance');
         const mineBtn = document.getElementById('mineBtn');
         const timerDisplay = document.getElementById('timer');
