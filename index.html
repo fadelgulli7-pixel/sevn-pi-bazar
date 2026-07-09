@@ -5,12 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEVEN Mining Pro</title>
     <style>
-        :root { --primary: #00e5ff; --bg: #050508; }
-        body { margin: 0; padding: 20px; font-family: sans-serif; text-align: center; color: #fff; background-color: var(--bg); }
+        :root { --primary: #00e5ff; }
+        body { 
+            margin: 0; padding: 20px; font-family: sans-serif; text-align: center; color: #fff;
+            /* وێنەیێ تە یێ ل سەرێ دانای وەک بەگرەوند */
+            background-image: url('67246.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
         
-        /* The Blue Gradient Card */
+        /* بۆ زێدەکرنا ڕەنگی ل سەر وێنەی دا ناڤەڕۆک بـ ئاسانی بێتە خواندن */
+        .overlay { background: rgba(5, 5, 8, 0.85); min-height: 100vh; padding: 20px; border-radius: 20px; }
+
         .wallet-card { 
-            background: linear-gradient(135deg, #7000ff, #00e5ff);
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.8), rgba(0, 229, 255, 0.8));
             padding: 30px; border-radius: 25px; margin-bottom: 20px;
             box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
         }
@@ -23,15 +33,13 @@
         }
         .mine-btn:disabled { border-color: #444; color: #444; cursor: not-allowed; }
         
-        /* Stats & Leaderboard Styling - ڕەنگێن نوی */
         .box { 
-            background: linear-gradient(145deg, #15151a, #0a0a0e); 
+            background: rgba(0, 0, 0, 0.6); 
             border: 1px solid #333; 
             padding: 20px; 
             border-radius: 20px; 
             margin-top: 20px; 
             color: #aaa;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         
         .invite-btn { 
@@ -41,28 +49,30 @@
     </style>
 </head>
 <body>
-    <h1>SEVEN Mining</h1>
-    
-    <div class="wallet-card">
-        <div style="font-size: 14px; opacity: 0.8;">Current Balance</div>
-        <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 10.5</div>
-        <div id="prediction" style="font-size: 12px; margin-top: 5px;">Est. Monthly: 315.0 SEVN</div>
+    <div class="overlay">
+        <h1>SEVEN Mining</h1>
+        
+        <div class="wallet-card">
+            <div style="font-size: 14px; opacity: 0.8;">Current Balance</div>
+            <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 10.5</div>
+            <div id="prediction" style="font-size: 12px; margin-top: 5px;">Est. Monthly: 315.0 SEVN</div>
+        </div>
+
+        <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
+        <div id="timer" style="color: #ff00ff; margin-top: 15px; font-weight: bold;">Ready to mine!</div>
+
+        <div class="box" style="display: flex; justify-content: space-around;">
+            <div><div style="font-size: 20px; color: #fff;">12.4k</div><div style="font-size: 10px;">Active Miners</div></div>
+            <div><div style="font-size: 20px; color: #fff;">0.5/h</div><div style="font-size: 10px;">Mining Rate</div></div>
+        </div>
+
+        <div class="box">
+            🏆 <strong style="color: #fff;">Leaderboard:</strong><br>
+            1. CryptoKing (500 SEVN) | 2. MineMaster (420 SEVN)
+        </div>
+
+        <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
     </div>
-
-    <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
-    <div id="timer" style="color: #ff00ff; margin-top: 15px; font-weight: bold;">Ready to mine!</div>
-
-    <div class="box" style="display: flex; justify-content: space-around;">
-        <div><div style="font-size: 20px; color: #fff;">12.4k</div><div style="font-size: 10px;">Active Miners</div></div>
-        <div><div style="font-size: 20px; color: #fff;">0.5/h</div><div style="font-size: 10px;">Mining Rate</div></div>
-    </div>
-
-    <div class="box">
-        🏆 <strong style="color: #fff;">Leaderboard:</strong><br>
-        1. CryptoKing (500 SEVN) | 2. MineMaster (420 SEVN)
-    </div>
-
-    <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
 
     <script>
         let balance = 10.5;
@@ -74,7 +84,7 @@
             balance += 0.5;
             balanceDisplay.innerText = "SEVN: " + balance.toFixed(1);
             mineBtn.disabled = true;
-            startTimer(86400); // 24 دەمژمێر
+            startTimer(86400);
             alert("تە 0.5 SEVN ب دەست ڤە ئینان!");
         }
 
