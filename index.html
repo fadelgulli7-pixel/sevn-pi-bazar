@@ -32,11 +32,6 @@
             <div id="prediction" style="font-size: 12px; margin-top: 5px;">Est. Monthly: 315.0 SEVN</div>
         </div>
 
-        <!-- زێدەکرنا خانەیا ناڤێ یوزەری -->
-        <div class="box">
-            <input type="text" id="telegramUser" placeholder="Enter your Telegram username" style="width: 80%; padding: 10px; border-radius: 10px; border: none; color: #000;">
-        </div>
-
         <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
         <div id="timer" style="color: #ff00ff; margin-top: 15px; font-weight: bold;">Ready to mine!</div>
 
@@ -53,7 +48,7 @@
         <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
 
         <script>
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwthwvO0YNK85e5nWxCQovtjLs9CztYpsVu5-A81kPm2jmRhZTr_4Jkpq6oOnBPViSylA/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzEhjpRTKnMWwUIv53xGq4CI7Kb4gE2RZSPM-iZNHHUqVANlRnaS34PbZel7jhB3bUL/exec';
             
             const balanceDisplay = document.getElementById('balance');
             const mineBtn = document.getElementById('mineBtn');
@@ -68,13 +63,6 @@
             }
 
             function mineCoins() {
-                let username = document.getElementById('telegramUser').value; // وەرگرتنا ناڤی
-                
-                if (username === "") {
-                    alert("تکایە ناڤێ خۆ یێ تێلێگرامی بنڤیسە!");
-                    return;
-                }
-
                 balance += 0.5;
                 balanceDisplay.innerText = "SEVN: " + balance.toFixed(1);
                 mineBtn.disabled = true;
@@ -85,7 +73,7 @@
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        username: username, // هنارتنا ناڤێ دروست
+                        username: "User_Test",
                         wallet: "0x123456789",
                         amount: 0.5
                     })
