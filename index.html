@@ -32,6 +32,11 @@
             <div id="prediction" style="font-size: 12px; margin-top: 5px;">Est. Monthly: 315.0 SEVN</div>
         </div>
 
+        <!-- زێدەکرنا خانەیا ناڤێ یوزەری -->
+        <div class="box">
+            <input type="text" id="telegramUser" placeholder="Enter your Telegram username" style="width: 80%; padding: 10px; border-radius: 10px; border: none; color: #000;">
+        </div>
+
         <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
         <div id="timer" style="color: #ff00ff; margin-top: 15px; font-weight: bold;">Ready to mine!</div>
 
@@ -57,13 +62,19 @@
             let balance = 11.0;
             const lastMine = localStorage.getItem('lastMineTime');
 
-            // دیتێکتکرنا کاتێ و پاراستنا وی د براوسەری دا
             if (lastMine && (Math.floor(Date.now() / 1000) - lastMine < 86400)) {
                 mineBtn.disabled = true;
                 startTimer(86400 - (Math.floor(Date.now() / 1000) - lastMine));
             }
 
             function mineCoins() {
+                let username = document.getElementById('telegramUser').value; // وەرگرتنا ناڤی
+                
+                if (username === "") {
+                    alert("تکایە ناڤێ خۆ یێ تێلێگرامی بنڤیسە!");
+                    return;
+                }
+
                 balance += 0.5;
                 balanceDisplay.innerText = "SEVN: " + balance.toFixed(1);
                 mineBtn.disabled = true;
@@ -74,7 +85,7 @@
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        username: "User_Test",
+                        username: username, // هنارتنا ناڤێ دروست
                         wallet: "0x123456789",
                         amount: 0.5
                     })
