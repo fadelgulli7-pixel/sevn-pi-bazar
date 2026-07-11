@@ -5,79 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEVEN Mining Pro</title>
     <style>
-        :root { --primary: #00e5ff; }
-        body { 
-            margin: 0; padding: 20px; font-family: sans-serif; text-align: center; color: #fff;
-            background-image: url('67024.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
+        :root { --primary: #ff00ff; --secondary: #00e5ff; --dark: #050508; }
+        body { margin: 0; padding: 20px; font-family: sans-serif; text-align: center; color: #fff; background-color: #050508; }
+        
+        /* The Blue Gradient Card */
+        .wallet-card { 
+            background: linear-gradient(135deg, #7000ff, #00e5ff);
+            padding: 30px; border-radius: 20px; margin-bottom: 20px;
         }
-        .overlay { background: rgba(10, 5, 20, 0.75); min-height: 100vh; padding: 20px; border-radius: 20px; }
-        .wallet-card { background: linear-gradient(135deg, rgba(112, 0, 255, 0.6), rgba(0, 229, 255, 0.6)); padding: 30px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .mine-btn { background: rgba(0, 0, 0, 0.8); border: 2px solid var(--primary); padding: 20px 60px; color: var(--primary); font-size: 20px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .mine-btn:disabled { border-color: #444; color: #444; cursor: not-allowed; }
-        .box { background: rgba(0, 0, 0, 0.6); border: 1px solid #444; padding: 20px; border-radius: 20px; margin-top: 20px; color: #ddd; }
-        .invite-btn { background: var(--primary); color: #000; border: none; padding: 15px 50px; border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 25px; }
+        
+        .mine-btn { 
+            background: #222; border: 2px solid #333; padding: 20px 80px; 
+            color: #555; font-size: 20px; border-radius: 15px; font-weight: bold;
+        }
+        
+        /* Stats & Leaderboard styling */
+        .stats-box, .leaderboard-box { 
+            background: #111; border: 1px solid #333; padding: 20px; 
+            border-radius: 15px; margin-top: 20px; color: #aaa;
+        }
+        
+        .invite-btn { 
+            background: #00e5ff; color: #000; border: none; padding: 15px 60px; 
+            border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="overlay">
-        <h1>SEVEN Mining</h1>
-        <div class="wallet-card">
-            <div style="font-size: 14px; opacity: 0.8;">Current Balance</div>
-            <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 11.0</div>
-        </div>
-
-        <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
-        <div id="timer" style="color: #ff00ff; margin-top: 15px; font-weight: bold;">Ready to mine!</div>
-
-        <script>
-            // ئەم لینکە کلیلی پەیوەندییە لەگەڵ Google Sheets
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwthwv00YNK85eNwXCqovtjLs9CztYpsVu5-A81kPm2jmRhZTr_4Jkpq6o0nBPViSylA/exec';
-            
-            let balance = 11.0; 
-            const balanceDisplay = document.getElementById('balance');
-            const mineBtn = document.getElementById('mineBtn');
-            const timerDisplay = document.getElementById('timer');
-
-            function mineCoins() {
-                balance += 0.5;
-                balanceDisplay.innerText = "SEVN: " + balance.toFixed(1);
-                mineBtn.disabled = true;
-                
-                // ناردنی زانیاری بۆ Google Sheets
-                fetch(scriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: "User_Test", // دەتوانیت ناوی ڕاستەقینە لێرە دابنێیت
-                        wallet: "0x123456789", // والێتی یوزەر
-                        amount: 0.5
-                    })
-                });
-
-                startTimer(86400);
-                alert("تە 0.5 SEVN ب دەست ڤە ئینان و تومار بوو!");
-            }
-
-            function startTimer(duration) {
-                let timer = duration;
-                let interval = setInterval(() => {
-                    let h = Math.floor(timer / 3600);
-                    let m = Math.floor((timer % 3600) / 60);
-                    let s = timer % 60;
-                    timerDisplay.innerText = `Next claim in: ${h}h ${m}m ${s}s`;
-                    if (--timer < 0) {
-                        clearInterval(interval);
-                        mineBtn.disabled = false;
-                        timerDisplay.innerText = "Ready to mine!";
-                    }
-                }, 1000);
-            }
-        </script>
+    <h1>SEVEN Mining</h1>
+    
+    <div class="wallet-card">
+        <div style="font-size: 14px;">Current Balance</div>
+        <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 10.5</div>
+        <div id="prediction" style="font-size: 12px; margin-top: 5px;">Est. Monthly: 315.0 SEVN</div>
     </div>
+
+    <button class="mine-btn" disabled>MINE 0.5 SEVN</button>
+    <div id="timer" style="color: var(--primary); margin-top: 15px; font-weight: bold;">Next claim in: 23h 59m 33s</div>
+
+    <div class="stats-box" style="display: flex; justify-content: space-around;">
+        <div><div style="font-size: 18px; color: #fff;">12.4k</div><div style="font-size: 10px;">Active Miners</div></div>
+        <div><div style="font-size: 18px; color: #fff;">0.5/h</div><div style="font-size: 10px;">Mining Rate</div></div>
+    </div>
+
+    <div class="leaderboard-box">
+        🏆 <strong>Leaderboard:</strong><br>
+        1. CryptoKing (500 SEVN) | 2. MineMaster (420 SEVN)
+    </div>
+
+    <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
+
+    <script>
+        function copyLink() {
+            navigator.clipboard.writeText("https://t.me/SEVEN_Coin_2026_bot/SevenApp");
+            alert("Invite link copied!");
+        }
+    </script>
 </body>
 </html>
