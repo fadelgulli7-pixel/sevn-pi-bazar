@@ -7,58 +7,30 @@
     <style>
         :root { --primary: #ff00ff; --secondary: #00e5ff; --dark: #050508; }
         body { margin: 0; padding: 20px; font-family: sans-serif; text-align: center; color: #fff; background-color: #050508; }
-        
-        .wallet-card { 
-            background: linear-gradient(135deg, #7000ff, #00e5ff);
-            padding: 30px; border-radius: 20px; margin-bottom: 20px;
-        }
-        
-        .mine-btn { 
-            background: #222; border: 2px solid #333; padding: 20px 80px; 
-            color: #555; font-size: 20px; border-radius: 15px; font-weight: bold; cursor: pointer;
-        }
-        
-        .stats-box, .leaderboard-box { 
-            background: #111; border: 1px solid #333; padding: 20px; 
-            border-radius: 15px; margin-top: 20px; color: #aaa;
-        }
-        
-        .invite-btn { 
-            background: #00e5ff; color: #000; border: none; padding: 15px 60px; 
-            border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 20px;
-        }
+        .wallet-card { background: linear-gradient(135deg, #7000ff, #00e5ff); padding: 30px; border-radius: 20px; margin-bottom: 20px; }
+        .mine-btn { background: #222; border: 2px solid var(--primary); padding: 20px 80px; color: var(--primary); font-size: 20px; border-radius: 15px; font-weight: bold; cursor: pointer; }
+        .mine-btn:disabled { border: 2px solid #555; color: #555; cursor: not-allowed; }
+        .stats-box, .leaderboard-box { background: #111; border: 1px solid #333; padding: 20px; border-radius: 15px; margin-top: 20px; color: #aaa; }
+        .invite-btn { background: #00e5ff; color: #000; border: none; padding: 15px 60px; border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body>
     <h1>SEVEN Mining</h1>
-    
     <div class="wallet-card">
         <div style="font-size: 14px;">Current Balance</div>
         <div id="balance" style="font-size: 40px; font-weight: bold;">SEVN: 10.5</div>
-        <div id="prediction" style="font-size: 12px; margin-top: 5px;">Est. Monthly: 315.0 SEVN</div>
     </div>
 
     <button class="mine-btn" id="mineBtn" onclick="mineCoins()">MINE 0.5 SEVN</button>
     <div id="timer" style="color: var(--primary); margin-top: 15px; font-weight: bold;">Ready to mine!</div>
 
-    <div class="stats-box" style="display: flex; justify-content: space-around;">
-        <div><div style="font-size: 18px; color: #fff;">12.4k</div><div style="font-size: 10px;">Active Miners</div></div>
-        <div><div style="font-size: 18px; color: #fff;">0.5/h</div><div style="font-size: 10px;">Mining Rate</div></div>
-    </div>
-
-    <div class="leaderboard-box">
-        🏆 <strong>Leaderboard:</strong><br>
-        1. CryptoKing (500 SEVN) | 2. MineMaster (420 SEVN)
-    </div>
-
-    <button class="invite-btn" onclick="copyLink()">Copy Invite Link</button>
-
     <script>
-        // ئەمە لینکەکەتە
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwthwv00YNK85eNwXCqovtjLs9CztYpsVu5-A81kPm2jmRhZTr_4Jkpq6o0nBPViSylA/exec';
+        const mineBtn = document.getElementById('mineBtn');
+        const timerDisplay = document.getElementById('timer');
 
         function mineCoins() {
-            // ناردنی داتا بۆ Google Sheet
+            // 1. هنارتنا داتایان
             fetch(scriptURL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -69,7 +41,28 @@
                     amount: 0.5
                 })
             });
-            alert("تە داتا هنارت!");
+
+            // 2. کێمکرنا دوگمێ
+            mineBtn.disabled = true;
+            alert("تە 0.5 SEVN ب دەست ڤە ئینان!");
+            
+            // 3. دەستپێکرنا تایمەرێ (بۆ ٢٤ دەمژمێران)
+            startTimer(86400); 
+        }
+
+        function startTimer(duration) {
+            let timer = duration;
+            let interval = setInterval(() => {
+                let h = Math.floor(timer / 3600);
+                let m = Math.floor((timer % 3600) / 60);
+                let s = timer % 60;
+                timerDisplay.innerText = `Next claim in: ${h}h ${m}m ${s}s`;
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    mineBtn.disabled = false;
+                    timerDisplay.innerText = "Ready to mine!";
+                }
+            }, 1000);
         }
 
         function copyLink() {
